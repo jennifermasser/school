@@ -52,7 +52,7 @@
                 <div class="p-2 bg-teal-50 rounded-lg text-teal-700">
                     <!-- Bio Icon (DNA SVG) -->
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
                     </svg>
                 </div>
                 <div>
@@ -88,7 +88,7 @@
             <div class="bg-gradient-to-br from-teal-700 to-emerald-800 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
                 <!-- Background decoration -->
                 <div class="absolute right-0 bottom-0 opacity-10 translate-x-10 translate-y-10 scale-150">
-                    <svg class="w-96 h-96" fill="currentColor" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                    <svg class="w-96 h-96" fill="currentColor" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                 </div>
                 
                 <div class="relative z-10 max-w-xl">
@@ -476,7 +476,7 @@
     <script type="module">
         // Import Firebase JS modules via CDN
         import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, deleteDoc, collection, onSnapshot, query, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // =========================================================================
@@ -486,14 +486,7 @@
         // all student devices and the teacher portal will automatically link
         // to this database upon loading, without needing manual setup on each tab!
         // =========================================================================
-        const HARDCODED_FIREBASE_CONFIG = {
-            apiKey: "AIzaSyBsAH1_UZazyxf43vCXGXWl4pI0q4OkF4U",
-            authDomain: "credit-recovery-week-2-ebd19.firebaseapp.com",
-            projectId: "credit-recovery-week-2-ebd19",
-            storageBucket: "credit-recovery-week-2-ebd19.firebasestorage.app",
-            messagingSenderId: "211416537487",
-            appId: "1:211416537487:web:65ed9adcafe50a197513fa"
-        };
+        const HARDCODED_FIREBASE_CONFIG = null;
         // =========================================================================
 
         // --- MASTER QUESTION REPOSITORY ---
@@ -546,7 +539,7 @@
                     type: "SA",
                     text: "What is the primary green pigment in plants that is responsible for absorbing the sunlight required for photosynthesis?",
                     acceptable: ["chlorophyll"],
-                    explanation: "Chlorophyll is the key light-absorbing pigment that captures solar energy and gives plants their green coloration."
+                    explanation: "Chlorophyll is the key light-absorbing pigment that captures solar energy and gives plant systems their green coloration."
                 }
             ],
             "Cellular Respiration": [
@@ -833,8 +826,6 @@
                 }
 
                 // RULE 3: Auth Before Queries & Correct Re-initialization
-                // Prevent app/duplicate-app error by reusing an already initialized instance if options are the same,
-                // or initializing cleanly if it's the first time/updated credentials.
                 let app;
                 const activeApps = getApps();
                 if (activeApps.length > 0) {
@@ -846,9 +837,7 @@
                 auth = getAuth(app);
                 db = getFirestore(app);
 
-                // RULE 3: ALWAYS call Anonymous Sign In first (or with Custom Token priority)
-                // In our external customer setting, __initial_auth_token isn't a valid custom token for their project
-                // and triggers "auth/custom-token-mismatch" instantly. We safely check and fall back immediately.
+                // RULE 3: ALWAYS call Authentication FIRST and await it, then guard operations.
                 try {
                     if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                         await signInWithCustomToken(auth, __initial_auth_token);
@@ -856,15 +845,16 @@
                         await signInAnonymously(auth);
                     }
                 } catch (authErr) {
-                    // Fall back cleanly to anonymous login if the token fails or is mismatched
-                    console.warn("Primary custom token mismatch. Falling back to anonymous credentials...", authErr);
+                    console.warn("Primary token mismatch. Falling back to anonymous sign-in...", authErr);
                     await signInAnonymously(auth);
                 }
 
                 isDbConnected = true;
                 updateHeaderConnectionStatus("connected", config.projectId);
 
-                // Active snapshot listener using strict path rules matching RULE 1 & 2
+                // MANDATORY RULE 1: STRICT PATHS MUST BE USED.
+                // Path structure: /artifacts/{appId}/public/data/attempts/{attemptId}
+                // Fetch attempts collection matching strict path rules.
                 const attemptsCol = collection(db, 'artifacts', appId, 'public', 'data', 'attempts');
                 firestoreUnsubscribe = onSnapshot(attemptsCol, (snapshot) => {
                     const syncedAttempts = [];
@@ -918,9 +908,9 @@
             let errMsg = err.message || String(err);
 
             if (errMsg.includes("permission-denied") || errMsg.includes("Missing or insufficient permissions")) {
-                helpfulAdvice = "🔒 **Firestore Rules Blocked:** Your Database rules are denying access. Go to Firestore Database > Rules tab, and ensure you have published rules allowing read/write access under `/artifacts/**`.";
+                helpfulAdvice = "🔒 **Firestore Rules Mismatch:** Your Firestore rules are denying permission. Please ensure your project's rules allow read and write access under the path `/artifacts/" + appId + "/public/data/attempts/{attemptId}`. Example rules:<br><br><pre class='bg-slate-800 text-slate-100 p-2 rounded font-mono text-[10px] whitespace-pre-wrap'>match /artifacts/" + appId + "/public/data/attempts/{attemptId} {\n  allow read, write: if request.auth != null;\n}</pre>";
                 diagCard.className = "p-3 rounded-lg border border-red-200 bg-red-50 text-red-900 leading-relaxed space-y-1";
-                diagTitle.innerText = "Security Rules Denied Access";
+                diagTitle.innerText = "Security Rules Permission Denied";
             } else if (errMsg.includes("auth") || errMsg.includes("API key")) {
                 helpfulAdvice = "🔑 **Authentication Blocked:** Your API Key may be restricted, or Anonymous Sign-In is not enabled. Go to Authentication > Sign-in method tab in your Firebase Console, and enable **Anonymous** sign-in.";
                 diagCard.className = "p-3 rounded-lg border border-amber-200 bg-amber-50 text-amber-900 leading-relaxed space-y-1";
@@ -1125,6 +1115,7 @@
 
             if (isDbConnected && db) {
                 try {
+                    // RULE 1: STRICT PATHS MUST BE USED.
                     const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'attempts', activeAttemptId);
                     await setDoc(docRef, attemptRecord);
                 } catch (e) {
