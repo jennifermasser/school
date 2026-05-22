@@ -58,8 +58,8 @@
                 <div>
                     <div class="flex items-center space-x-2">
                         <h1 class="font-bold text-lg text-slate-900 tracking-tight leading-tight">BioLab Quizzer</h1>
-                        <span id="header-sync-badge" class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500">
-                            Offline Mode
+                        <span id="header-sync-badge" class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-teal-100 text-teal-800">
+                            Local Storage Mode
                         </span>
                     </div>
                     <p class="text-xs text-slate-500 font-medium">HS Biology NGSS Practice</p>
@@ -97,17 +97,13 @@
                     <p class="text-teal-100 text-sm mt-3 leading-relaxed">
                         Prepare for your unit evaluations with this randomized practice quiz focusing on the big ideas of life science. You will receive exactly <strong>3 questions</strong> per topic (18 questions total), randomly pulled from our active curriculum bank.
                     </p>
-                    <p class="text-teal-200 text-xs font-semibold mt-2 flex items-center">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-                        Live Progress Sync: Your teacher can review your work live as you proceed!
-                    </p>
                 </div>
             </div>
 
             <!-- Start Panel -->
             <div class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-md">
                 <h3 class="text-xl font-bold text-slate-900 mb-2">Ready to Start?</h3>
-                <p class="text-slate-500 text-sm mb-6">Enter your full name to begin. Your practice scores, elapsed time, and live answers will be automatically synced with the teacher portal.</p>
+                <p class="text-slate-500 text-sm mb-6">Enter your full name to begin. Your practice scores, elapsed time, and completed answers will be automatically recorded locally for teacher review.</p>
                 
                 <form id="form-start-quiz" onsubmit="startQuiz(event)" class="space-y-4">
                     <div>
@@ -155,7 +151,7 @@
             <!-- Question Card -->
             <div class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-md">
                 <!-- Question Statement -->
-                <h3 id="question-text" class="text-lg font-bold text-slate-950 mb-6 leading-relaxed">
+                <h3 id="question-text" class="text-lg font-bold text-slate-950 mb-6 leading-relaxed font-sans">
                     Question text placeholder
                 </h3>
 
@@ -170,7 +166,7 @@
                     <div id="feedback-icon" class="flex-shrink-0 mt-0.5"></div>
                     <div>
                         <h4 id="feedback-title" class="font-bold text-sm">Correct!</h4>
-                        <p id="feedback-explanation" class="text-xs mt-1 text-slate-600 leading-relaxed"></p>
+                        <p id="feedback-explanation" class="text-xs mt-1 text-slate-600 leading-relaxed font-sans"></p>
                     </div>
                 </div>
 
@@ -201,7 +197,7 @@
 
                 <span class="text-xs font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-100">Quiz Completed!</span>
                 <h2 class="text-3xl font-extrabold text-slate-950 mt-3" id="results-greeting">Great Job!</h2>
-                <p class="text-slate-500 text-sm mt-1">Your final response was successfully formatted and synced with the portal database.</p>
+                <p class="text-slate-500 text-sm mt-1">Your final response was successfully recorded locally.</p>
 
                 <!-- Score Circular Display -->
                 <div class="my-8 flex justify-center items-center">
@@ -246,16 +242,9 @@
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900 p-6 rounded-2xl text-white shadow-md">
                 <div>
                     <span class="text-teal-400 text-xs font-bold uppercase tracking-wider font-mono">Teacher Control Hub</span>
-                    <h2 class="text-2xl font-extrabold mt-1">Classroom Progress Analytics</h2>
+                    <h2 class="text-2xl font-extrabold mt-1 font-sans">Classroom Progress Analytics</h2>
                 </div>
                 <div class="flex flex-wrap gap-2">
-                    <button onclick="openDbConfigModal()" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold flex items-center space-x-1 border border-amber-500 transition-colors shadow-md">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                        <span>Database Diagnostics</span>
-                    </button>
                     <button onclick="exportToCSV()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold flex items-center space-x-1 border border-slate-700 transition-colors shadow-sm">
                         <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -295,10 +284,10 @@
             <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                 <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50/50">
                     <div class="flex items-center space-x-2">
-                        <h3 class="font-bold text-slate-900 text-sm">Completed Student Attempts</h3>
+                        <h3 class="font-bold text-slate-900 text-sm">Classroom Practice Logs</h3>
                         <span id="live-feed-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 flex items-center">
                             <span class="w-1.5 h-1.5 rounded-full bg-slate-400 mr-1.5"></span>
-                            Local Sandbox Feed
+                            Local Session Active
                         </span>
                     </div>
                     <span class="text-xs text-slate-500" id="table-record-count">Showing 0 attempts</span>
@@ -312,9 +301,9 @@
                                 <th class="px-6 py-3">Date & Time</th>
                                 <th class="px-6 py-3">Completed Progress</th>
                                 <th class="px-6 py-3">Raw Score</th>
-                                <th class="px-6 py-3">Current %</th>
+                                <th class="px-6 py-3">Percentage</th>
                                 <th class="px-6 py-3">Elapsed Time</th>
-                                <th class="px-6 py-3">Status</th>
+                                <th class="px-6 py-3">Weakest Unit</th>
                                 <th class="px-6 py-3 text-right">Monitoring</th>
                             </tr>
                         </thead>
@@ -328,7 +317,6 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                     <p class="text-slate-500 font-semibold" id="table-placeholder-text">No attempts logged yet in this session.</p>
-                    <p class="text-slate-400 text-xs mt-1 max-w-sm mx-auto hidden" id="table-placeholder-hint">Open the quiz on a student device or another tab to see live results sync instantly!</p>
                 </div>
             </div>
         </section>
@@ -338,7 +326,7 @@
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
         <div class="max-w-6xl mx-auto px-4">
-            <p>&copy; Biology Curriculum Credit Recovery Program. Self-grading practice tests with live dashboards.</p>
+            <p>&copy; Biology Curriculum Credit Recovery Program. Self-grading practice tests with local dashboard storage.</p>
         </div>
     </footer>
 
@@ -363,50 +351,6 @@
                     <div class="flex space-x-2 pt-2">
                         <button type="button" onclick="closeTeacherAuth()" class="w-1/2 py-2 border border-slate-200 text-slate-600 text-xs font-semibold rounded-lg hover:bg-slate-50">Cancel</button>
                         <button type="submit" class="w-1/2 py-2 bg-slate-900 hover:bg-black text-white text-xs font-semibold rounded-lg">Authorize</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Firebase Connection Config Modal -->
-    <div id="modal-db-setup" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden border border-slate-100 flex flex-col max-h-[90vh]">
-            <div class="p-6 border-b border-slate-150">
-                <h3 class="text-lg font-bold text-slate-900 flex items-center">
-                    <svg class="w-5 h-5 text-amber-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                    </svg>
-                    Configure Custom Firestore Database
-                </h3>
-                <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-                    Connecting to your own Firebase project enables secure, real-time cross-tab & cross-device student tracking on any hosted website.
-                </p>
-            </div>
-            <div class="p-6 overflow-y-auto custom-scrollbar space-y-4 flex-grow text-xs text-slate-600">
-                <div id="active-diagnostic-card" class="hidden p-3 rounded-lg border leading-relaxed space-y-1.5">
-                    <span class="font-bold block uppercase text-[10px] tracking-wide" id="diagnostic-status-title">Status Report</span>
-                    <p id="diagnostic-status-message"></p>
-                </div>
-
-                <div class="bg-slate-50 p-3 rounded-lg border border-slate-150 space-y-1.5 leading-relaxed">
-                    <span class="font-bold text-slate-800 block">Setup Checklist:</span>
-                    1. Enable **Anonymous Sign-In** inside Firebase Auth.<br>
-                    2. Enable **Cloud Firestore** and deploy correct security rules.<br>
-                    3. Paste your web app's config block below.
-                </div>
-                <form id="form-db-config" onsubmit="saveCustomFirebaseConfig(event)" class="space-y-3">
-                    <div>
-                        <label for="db-config-json" class="block font-bold text-slate-700 uppercase tracking-wider mb-1.5">Firebase Configuration Object</label>
-                        <textarea id="db-config-json" required rows="6" placeholder='e.g.&#10;{&#10;  "apiKey": "AIzaSy...",&#10;  "authDomain": "myproject.firebaseapp.com",&#10;  "projectId": "myproject-123",&#10;  "appId": "1:2345:web:abcd..."&#10;}'
-                            class="w-full font-mono px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-[11px]"></textarea>
-                    </div>
-                    <div id="db-config-error" class="hidden p-2.5 text-red-800 bg-red-50 border border-red-200 rounded-lg font-semibold"></div>
-                    
-                    <div class="flex justify-end space-x-2 pt-2 border-t border-slate-100">
-                        <button type="button" onclick="closeDbConfigModal()" class="px-4 py-2 border border-slate-200 text-slate-600 font-semibold rounded-lg hover:bg-slate-50">Cancel</button>
-                        <button type="button" onclick="disconnectCustomFirebase()" class="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-700 font-semibold rounded-lg">Disconnect Custom DB</button>
-                        <button type="submit" class="px-4 py-2 bg-teal-700 hover:bg-teal-800 text-white font-semibold rounded-lg">Save & Connect</button>
                     </div>
                 </form>
             </div>
@@ -472,23 +416,8 @@
         <span id="toast-message">Data successfully exported!</span>
     </div>
 
-    <!-- ================= JAVASCRIPT SYSTEM & REAL-TIME SYNC ENGINE ================= -->
-    <script type="module">
-        // Import Firebase JS modules via CDN
-        import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, deleteDoc, collection, onSnapshot, query, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // =========================================================================
-        // 🌟 EASY SETUP: HARDCODED FIREBASE CONFIGURATION
-        // =========================================================================
-        // Paste your custom Firebase web configuration object below. If populated,
-        // all student devices and the teacher portal will automatically link
-        // to this database upon loading, without needing manual setup on each tab!
-        // =========================================================================
-        const HARDCODED_FIREBASE_CONFIG = null;
-        // =========================================================================
-
+    <!-- ================= JAVASCRIPT SYSTEM & LOCAL STORAGE ENGINE ================= -->
+    <script>
         // --- MASTER QUESTION REPOSITORY ---
         const QUESTION_BANK = {
             "Photosynthesis": [
@@ -806,356 +735,85 @@
         let quizAnswersLog = []; // [{ question, userAnswer, isCorrect, correctText }]
         let quizStartTime = 0; // Epoch start timestamp
         let activeAttemptId = ""; // Current quiz attempt ID
-        let attemptsDatabase = []; // Unified attempts collection
-        let isDbConnected = false;
+        let attemptsDatabase = []; // Local attempts collection
 
-        // --- FIREBASE / PORTAL SYNC CONFIGURATION ---
-        let db = null;
-        let auth = null;
-        let appId = typeof __app_id !== 'undefined' ? __app_id : 'default-biology-app';
-        let firestoreUnsubscribe = null;
-
-        // --- DYNAMIC DATABASE INITIALIZER ---
-        async function connectToFirebase(config) {
-            updateHeaderConnectionStatus("connecting", config.projectId);
+        // --- DATABASE SECTOR (LOCAL STORAGE EXCLUSIVE) ---
+        function loadDatabaseFromLocal() {
             try {
-                // Unsubscribe from any active database listener first
-                if (firestoreUnsubscribe) {
-                    firestoreUnsubscribe();
-                    firestoreUnsubscribe = null;
-                }
-
-                // RULE 3: Auth Before Queries & Correct Re-initialization
-                let app;
-                const activeApps = getApps();
-                if (activeApps.length > 0) {
-                    app = activeApps[0];
+                const stored = localStorage.getItem('biology_quiz_local_attempts');
+                if (stored) {
+                    attemptsDatabase = JSON.parse(stored);
                 } else {
-                    app = initializeApp(config);
+                    // Pre-populate with a classic mock attempt to make the table look professional initially
+                    attemptsDatabase = [
+                        {
+                            id: "att-mock-1",
+                            studentName: "Sarah Jenkins",
+                            timestamp: new Date().toLocaleDateString() + ", 8:14 AM",
+                            rawTimestamp: Date.now() - 3600000,
+                            score: 16,
+                            total: 18,
+                            percentage: 89,
+                            timeSpent: "4m 12s",
+                            weakestTopic: "DNA Replication",
+                            answers: [
+                                { topic: "Photosynthesis", question: "What is the primary organelle where plants transform radiant solar energy into stable chemical energy?", correct: true, studentAns: "Chloroplast", correctAns: "Chloroplast" },
+                                { topic: "Photosynthesis", question: "What carbon-rich gas must plants absorb from the atmosphere as a main starting reactant to construct sugar molecules?", correct: true, studentAns: "carbon dioxide", correctAns: "carbon dioxide / co2" },
+                                { topic: "Photosynthesis", question: "Which of the following describes the basic transfer of energy during photosynthesis?", correct: true, studentAns: "Light energy is captured and stored as chemical energy within sugar molecules.", correctAns: "Light energy is captured and stored as chemical energy within sugar molecules." },
+                                { topic: "Cellular Respiration", question: "What is the primary organelle responsible for breaking down sugar molecules to release highly usable chemical energy (ATP)?", correct: true, studentAns: "Mitochondria", correctAns: "Mitochondria" },
+                                { topic: "Cellular Respiration", question: "What is the three-letter abbreviation of the primary energy currency molecule generated during cellular respiration?", correct: true, studentAns: "atp", correctAns: "atp" },
+                                { topic: "Cellular Respiration", question: "What is the ultimate biological goal of cellular respiration in living organisms?", correct: true, studentAns: "To break down food to yield usable chemical energy for the cell.", correctAns: "To break down food to yield usable chemical energy for the cell." },
+                                { topic: "Mitosis", question: "What is the primary function of mitosis in multicellular organisms, such as humans?", correct: true, studentAns: "Growth and repairing damaged tissues", correctAns: "Growth and repairing damaged tissues" },
+                                { topic: "Mitosis", question: "How many genetically identical daughter cells are produced from a single parent cell at the end of mitosis?", correct: true, studentAns: "2", correctAns: "2 / two" },
+                                { topic: "Mitosis", question: "Which of the following statements best describes the genetic makeup of the cells produced by mitosis?", correct: true, studentAns: "They are genetically identical to the original parent cell.", correctAns: "They are genetically identical to the original parent cell." },
+                                { topic: "Meiosis", question: "What is the primary function of meiosis in sexually reproducing organisms?", correct: true, studentAns: "To produce gametes (sperm and eggs) with half the original genetic material", correctAns: "To produce gametes (sperm and eggs) with half the original genetic material" },
+                                { topic: "Meiosis", question: "How many total daughter cells are produced at the completion of meiosis, starting from a single diploid parent cell?", correct: true, studentAns: "4", correctAns: "4 / four" },
+                                { topic: "Meiosis", question: "If a human somatic (body) cell has 46 chromosomes, how many chromosomes will be in a mature egg or sperm cell produced by meiosis?", correct: true, studentAns: "23", correctAns: "23" },
+                                { topic: "DNA Structure", question: "What is the general twisted-ladder structural shape of a double-stranded DNA molecule?", correct: true, studentAns: "Double helix", correctAns: "Double helix" },
+                                { topic: "DNA Structure", question: "According to DNA complementary base-pairing rules, what base will always pair with Adenine (A) on the opposite strand?", correct: true, studentAns: "Thymine", correctAns: "thymine / t" },
+                                { topic: "DNA Structure", question: "DNA is a polymer made up of simpler repeating chemical units. What are these individual structural subunits called?", correct: true, studentAns: "Nucleotides", correctAns: "Nucleotides" },
+                                { topic: "DNA Replication", question: "Why must a cell replicate its entire genome of DNA before it undergoes cell division?", correct: false, studentAns: "To make glucose for energy", correctAns: "To ensure each new daughter cell receives an exact, complete set of genetic instructions." },
+                                { topic: "DNA Replication", question: "DNA replication is described as 'semi-conservative.' This means each copied double helix consists of one original strand and one ____________ strand.", correct: true, studentAns: "new", correctAns: "new / newly synthesized / fresh" },
+                                { topic: "DNA Replication", question: "What is the final, high-level biological outcome of the DNA replication process?", correct: false, studentAns: "Amino acids are assembled into a functional, folded protein.", correctAns: "Two identical double-stranded DNA helices are formed from one original molecule." }
+                            ],
+                            breakdown: { "Photosynthesis": 3, "Cellular Respiration": 3, "Mitosis": 3, "Meiosis": 3, "DNA Structure": 3, "DNA Replication": 1 }
+                        }
+                    ];
+                    saveDatabaseToLocal();
                 }
-
-                auth = getAuth(app);
-                db = getFirestore(app);
-
-                // RULE 3: ALWAYS call Authentication FIRST and await it, then guard operations.
-                try {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                } catch (authErr) {
-                    console.warn("Primary token mismatch. Falling back to anonymous sign-in...", authErr);
-                    await signInAnonymously(auth);
-                }
-
-                isDbConnected = true;
-                updateHeaderConnectionStatus("connected", config.projectId);
-
-                // MANDATORY RULE 1: STRICT PATHS MUST BE USED.
-                // Path structure: /artifacts/{appId}/public/data/attempts/{attemptId}
-                // Fetch attempts collection matching strict path rules.
-                const attemptsCol = collection(db, 'artifacts', appId, 'public', 'data', 'attempts');
-                firestoreUnsubscribe = onSnapshot(attemptsCol, (snapshot) => {
-                    const syncedAttempts = [];
-                    snapshot.forEach((doc) => {
-                        syncedAttempts.push(doc.data());
-                    });
-                    
-                    // Merge live database with any local storage attempts (prioritize live)
-                    attemptsDatabase = mergeLocalAndOnlineAttempts(syncedAttempts);
-                    renderTeacherAnalytics();
-                }, (err) => {
-                    console.error("Firestore live feed subscription failed:", err);
-                    isDbConnected = false;
-                    handleConnectionError(err);
-                });
-
-            } catch (err) {
-                console.error("Firebase Connection Setup Failed:", err);
-                isDbConnected = false;
-                handleConnectionError(err);
-                throw err;
-            }
-        }
-
-        // --- MERGE OFFLINE AND ONLINE WORKBOOKS ---
-        function mergeLocalAndOnlineAttempts(syncedList) {
-            let localList = [];
-            try {
-                const stored = localStorage.getItem('local_attempts_backup');
-                if (stored) localList = JSON.parse(stored);
-            } catch(e){}
-
-            // Combine both pools, favoring live records in case of duplicate IDs
-            const mergedMap = new Map();
-            localList.forEach(item => mergedMap.set(item.id, item));
-            syncedList.forEach(item => mergedMap.set(item.id, item));
-
-            return Array.from(mergedMap.values()).sort((a, b) => b.rawTimestamp - a.rawTimestamp);
-        }
-
-        // --- INTERACTIVE DIAGNOSTICS & SYSTEM ALERTS ---
-        function handleConnectionError(err) {
-            updateHeaderConnectionStatus("error");
-            
-            const errDiv = document.getElementById('db-config-error');
-            const diagCard = document.getElementById('active-diagnostic-card');
-            const diagMsg = document.getElementById('diagnostic-status-message');
-            const diagTitle = document.getElementById('diagnostic-status-title');
-
-            let helpfulAdvice = "";
-            let errMsg = err.message || String(err);
-
-            if (errMsg.includes("permission-denied") || errMsg.includes("Missing or insufficient permissions")) {
-                helpfulAdvice = "🔒 **Firestore Rules Mismatch:** Your Firestore rules are denying permission. Please ensure your project's rules allow read and write access under the path `/artifacts/" + appId + "/public/data/attempts/{attemptId}`. Example rules:<br><br><pre class='bg-slate-800 text-slate-100 p-2 rounded font-mono text-[10px] whitespace-pre-wrap'>match /artifacts/" + appId + "/public/data/attempts/{attemptId} {\n  allow read, write: if request.auth != null;\n}</pre>";
-                diagCard.className = "p-3 rounded-lg border border-red-200 bg-red-50 text-red-900 leading-relaxed space-y-1";
-                diagTitle.innerText = "Security Rules Permission Denied";
-            } else if (errMsg.includes("auth") || errMsg.includes("API key")) {
-                helpfulAdvice = "🔑 **Authentication Blocked:** Your API Key may be restricted, or Anonymous Sign-In is not enabled. Go to Authentication > Sign-in method tab in your Firebase Console, and enable **Anonymous** sign-in.";
-                diagCard.className = "p-3 rounded-lg border border-amber-200 bg-amber-50 text-amber-900 leading-relaxed space-y-1";
-                diagTitle.innerText = "Authentication Error";
-            } else {
-                helpfulAdvice = "🌐 **Connection Stalled:** The web client could not establish a network link. Check your internet connection, verify that the project ID is pasted correctly, or check your local firewall.";
-                diagCard.className = "p-3 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 leading-relaxed space-y-1";
-                diagTitle.innerText = "Network Stalled";
-            }
-
-            diagMsg.innerHTML = `${helpfulAdvice}<br><span class="block mt-2 font-mono text-[10px] text-slate-500">Firebase Raw Code: ${errMsg}</span>`;
-            diagCard.classList.remove('hidden');
-
-            if (errDiv) {
-                errDiv.innerText = "Error: " + errMsg;
-                errDiv.classList.remove('hidden');
-            }
-
-            // Fallback back to offline rendering immediately so the UI remains active
-            loadDummyData(false); 
-        }
-
-        // --- CONNECTION STATUS BADGE STYLER ---
-        function updateHeaderConnectionStatus(status, projectId = "") {
-            const hBadge = document.getElementById('header-sync-badge');
-            const tableBadge = document.getElementById('live-feed-badge');
-
-            if (status === "connected") {
-                hBadge.innerText = `Connected: ${projectId}`;
-                hBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-800 animate-pulse";
-                
-                tableBadge.innerHTML = `
-                    <span class="relative flex h-1.5 w-1.5 mr-1.5">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-                    </span>
-                    Live Cloud Sync Connected
-                `;
-                tableBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 flex items-center";
-            } else if (status === "connecting") {
-                hBadge.innerText = `Connecting: ${projectId}...`;
-                hBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 animate-pulse";
-                
-                tableBadge.innerHTML = `
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 mr-1.5 animate-ping"></span>
-                    Connecting to Database...
-                `;
-                tableBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-800 flex items-center";
-            } else {
-                hBadge.innerText = "Offline Sandbox";
-                hBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500";
-                
-                tableBadge.innerHTML = `
-                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400 mr-1.5"></span>
-                    Local Sandbox Feed
-                `;
-                tableBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 flex items-center";
-            }
-        }
-
-        // --- AUTOMATED INITIALIZATION SEQUENCE ---
-        const startupBootSequence = async () => {
-            // Priority 1: Check for manual local override settings in localStorage (Teacher Portal override)
-            let savedConfigStr = null;
-            try {
-                savedConfigStr = localStorage.getItem('custom_firebase_config');
-            } catch (e) {}
-
-            if (savedConfigStr) {
-                try {
-                    const parsedConfig = JSON.parse(savedConfigStr);
-                    await connectToFirebase(parsedConfig);
-                    return;
-                } catch (e) {
-                    console.warn("Stored custom config invalid. Resetting.", e);
-                    try { localStorage.removeItem('custom_firebase_config'); } catch(err){}
-                }
-            }
-
-            // Priority 2: Check for Hardcoded Global configuration
-            if (HARDCODED_FIREBASE_CONFIG) {
-                try {
-                    await connectToFirebase(HARDCODED_FIREBASE_CONFIG);
-                    return;
-                } catch (e) {
-                    console.error("Hardcoded configuration failed to connect:", e);
-                }
-            }
-
-            // Priority 3: Check for environment injection keys (inside sandbox environment)
-            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                try {
-                    const parsedConfig = JSON.parse(__firebase_config);
-                    await connectToFirebase(parsedConfig);
-                } catch (e) {
-                    loadDummyData();
-                }
-            } else {
-                loadDummyData();
-            }
-        };
-
-        function loadDummyData(showFullMocks = true) {
-            if (showFullMocks) {
-                const mocks = [
-                    {
-                        id: "att-mock-1",
-                        studentName: "Sarah Jenkins",
-                        timestamp: "May 22, 2026, 7:45 AM",
-                        rawTimestamp: Date.now() - 3600000,
-                        score: 16,
-                        total: 18,
-                        percentage: 89,
-                        timeSpent: "4m 12s",
-                        weakestTopic: "DNA Replication",
-                        status: "Completed",
-                        currentProgress: 18,
-                        answers: [
-                            { topic: "Photosynthesis", question: "What is the primary organelle where plants transform radiant solar energy into stable chemical energy?", correct: true, studentAns: "Chloroplast" },
-                            { topic: "Photosynthesis", question: "What carbon-rich gas must plants absorb from the atmosphere as a main starting reactant to construct sugar molecules?", correct: true, studentAns: "carbon dioxide" },
-                            { topic: "Photosynthesis", question: "Which of the following describes the basic transfer of energy during photosynthesis?", correct: true, studentAns: "Light energy is captured and stored as chemical energy within sugar molecules." },
-                            { topic: "Cellular Respiration", question: "What is the primary organelle responsible for breaking down sugar molecules to release highly usable chemical energy (ATP)?", correct: true, studentAns: "Mitochondria" },
-                            { topic: "Cellular Respiration", question: "What is the three-letter abbreviation of the primary energy currency molecule generated during cellular respiration?", correct: true, studentAns: "atp" },
-                            { topic: "Cellular Respiration", question: "What is the ultimate biological goal of cellular respiration in living organisms?", correct: true, studentAns: "To break down food to yield usable chemical energy for the cell." },
-                            { topic: "Mitosis", question: "What is the primary function of mitosis in multicellular organisms, such as humans?", correct: true, studentAns: "Growth and repairing damaged tissues" },
-                            { topic: "Mitosis", question: "How many genetically identical daughter cells are produced from a single parent cell at the end of mitosis?", correct: true, studentAns: "2" },
-                            { topic: "Mitosis", question: "Which of the following statements best describes the genetic makeup of the cells produced by mitosis?", correct: true, studentAns: "They are genetically identical to the original parent cell." },
-                            { topic: "Meiosis", question: "What is the primary function of meiosis in sexually reproducing organisms?", correct: true, studentAns: "To produce gametes (sperm and eggs) with half the original genetic material" },
-                            { topic: "Meiosis", question: "How many total daughter cells are produced at the completion of meiosis, starting from a single diploid parent cell?", correct: true, studentAns: "4" },
-                            { topic: "Meiosis", question: "If a human somatic (body) cell has 46 chromosomes, how many chromosomes will be in a mature egg or sperm cell produced by meiosis?", correct: true, studentAns: "23" },
-                            { topic: "DNA Structure", question: "What is the general twisted-ladder structural shape of a double-stranded DNA molecule?", correct: true, studentAns: "Double helix" },
-                            { topic: "DNA Structure", question: "According to DNA complementary base-pairing rules, what base will always pair with Adenine (A) on the opposite strand?", correct: true, studentAns: "Thymine" },
-                            { topic: "DNA Structure", question: "DNA is a polymer made up of simpler repeating chemical units. What are these individual structural subunits called?", correct: true, studentAns: "Nucleotides" },
-                            { topic: "DNA Replication", question: "Why must a cell replicate its entire genome of DNA before it undergoes cell division?", correct: false, studentAns: "To make glucose for energy", correctAns: "To ensure each new daughter cell receives an exact, complete set of genetic instructions." },
-                            { topic: "DNA Replication", question: "DNA replication is described as 'semi-conservative.' This means each copied double helix consists of one original strand and one ____________ strand.", correct: true, studentAns: "new" },
-                            { topic: "DNA Replication", question: "What is the final, high-level biological outcome of the DNA replication process?", correct: false, studentAns: "Amino acids are assembled into a functional, folded protein.", correctAns: "Two identical double-stranded DNA helices are formed from one original molecule." }
-                        ],
-                        breakdown: { "Photosynthesis": 3, "Cellular Respiration": 3, "Mitosis": 3, "Meiosis": 3, "DNA Structure": 3, "DNA Replication": 1 }
-                    }
-                ];
-                attemptsDatabase = mergeLocalAndOnlineAttempts(mocks);
-            } else {
-                attemptsDatabase = mergeLocalAndOnlineAttempts([]);
+            } catch(e) {
+                console.error("Failed to parse LocalStorage records", e);
             }
             renderTeacherAnalytics();
         }
 
-        // --- DYNAMIC PROGRESS SYNC ENGINE (CORE REQUIREMENT) ---
-        async function syncQuizProgress(status = "In Progress") {
-            const now = new Date();
-            const formattedDate = now.toLocaleDateString() + ", " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            
-            // Calculate real-time metrics
-            const totalCount = selectedQuestions.length || 18;
-            const scoreCount = quizAnswersLog.filter(a => a.correct).length;
-            const pct = Math.round((scoreCount / totalCount) * 100) || 0;
-            const durationMs = quizStartTime ? (Date.now() - quizStartTime) : 0;
-            const formattedDuration = formatDuration(durationMs);
-
-            // Intermediate Category Breakdowns
-            const topicBreakdown = {};
-            for (const topic in QUESTION_BANK) {
-                topicBreakdown[topic] = 0;
-            }
-            quizAnswersLog.forEach(log => {
-                if (log.correct) {
-                    topicBreakdown[log.topic] = (topicBreakdown[log.topic] || 0) + 1;
-                }
-            });
-
-            // Find weakest topic dynamically so far
-            let weakestTopic = "None";
-            let lowestScore = 4;
-            const completedTopics = new Set(quizAnswersLog.map(l => l.topic));
-            completedTopics.forEach(t => {
-                const logsForTopic = quizAnswersLog.filter(l => l.topic === t);
-                const correctCount = logsForTopic.filter(l => l.correct).length;
-                if (correctCount < lowestScore) {
-                    lowestScore = correctCount;
-                    weakestTopic = t;
-                }
-            });
-
-            const attemptRecord = {
-                id: activeAttemptId,
-                studentName: currentStudentName,
-                timestamp: formattedDate,
-                rawTimestamp: quizStartTime || Date.now(),
-                score: scoreCount,
-                total: totalCount,
-                percentage: pct,
-                timeSpent: formattedDuration,
-                weakestTopic: weakestTopic,
-                status: status, // "In Progress" or "Completed"
-                currentProgress: quizAnswersLog.length,
-                answers: quizAnswersLog,
-                breakdown: topicBreakdown
-            };
-
-            // Write to Firestore if connected, but ALWAYS back up to local storage first
-            backupAttemptToLocalStorage(attemptRecord);
-
-            if (isDbConnected && db) {
-                try {
-                    // RULE 1: STRICT PATHS MUST BE USED.
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'attempts', activeAttemptId);
-                    await setDoc(docRef, attemptRecord);
-                } catch (e) {
-                    console.error("Firestore sync write failed", e);
-                }
-            } else {
-                // Instantly update the local display database
-                const existingIdx = attemptsDatabase.findIndex(a => a.id === activeAttemptId);
-                if (existingIdx !== -1) {
-                    attemptsDatabase[existingIdx] = attemptRecord;
-                } else {
-                    attemptsDatabase.unshift(attemptRecord);
-                }
-                renderTeacherAnalytics();
+        function saveDatabaseToLocal() {
+            try {
+                localStorage.setItem('biology_quiz_local_attempts', JSON.stringify(attemptsDatabase));
+            } catch(e) {
+                console.warn("Failed to write offline local attempts", e);
             }
         }
 
-        // --- LOCAL STORAGE BACKUP SYSTEM ---
-        function backupAttemptToLocalStorage(attempt) {
-            try {
-                let localList = [];
-                const stored = localStorage.getItem('local_attempts_backup');
-                if (stored) localList = JSON.parse(stored);
-
-                const existingIdx = localList.findIndex(a => a.id === attempt.id);
-                if (existingIdx !== -1) {
-                    localList[existingIdx] = attempt;
-                } else {
-                    localList.unshift(attempt);
-                }
-
-                // Keep only the last 100 entries locally to maintain storage performance
-                if (localList.length > 100) {
-                    localList = localList.slice(0, 100);
-                }
-
-                localStorage.setItem('local_attempts_backup', JSON.stringify(localList));
-            } catch (e) {
-                console.warn("Failed to write offline storage backup", e);
+        // --- SHUFFLER UTILITY ---
+        function shuffleArray(array) {
+            let shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
             }
+            return shuffled;
+        }
+
+        // --- TIME FORMATTING UTILITY ---
+        function formatDuration(ms) {
+            const totalSeconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            if (minutes > 0) {
+                return `${minutes}m ${seconds}s`;
+            }
+            return `${seconds}s`;
         }
 
         // --- NAVIGATOR SWITCHES ---
@@ -1180,7 +838,7 @@
             currentQuestionIdx = 0;
             quizAnswersLog = [];
             quizStartTime = Date.now();
-            activeAttemptId = `att-${Date.now()}`; // Unique session ID
+            activeAttemptId = `att-${Date.now()}`;
 
             // Extract questions
             for (const topic in QUESTION_BANK) {
@@ -1190,7 +848,7 @@
             }
             selectedQuestions = shuffleArray(selectedQuestions);
 
-            // Instantly sync initial "In Progress" record
+            // Record initial "In Progress" log locally
             syncQuizProgress("In Progress");
 
             // UI Transformation
@@ -1217,7 +875,7 @@
             }
             selectedQuestions = shuffleArray(selectedQuestions);
 
-            // Instantly sync initial progress state
+            // Sync initial progress state locally
             syncQuizProgress("In Progress");
 
             document.getElementById('screen-results').classList.add('hidden');
@@ -1226,7 +884,7 @@
             renderCurrentQuestion();
         }
 
-        // --- RENDER COMPONENT VIEW ---
+        // --- RENDER CURRENT WORKBOOK QUESTION ---
         function renderCurrentQuestion() {
             const q = selectedQuestions[currentQuestionIdx];
             const totalQs = selectedQuestions.length;
@@ -1300,7 +958,7 @@
             });
         }
 
-        // --- ANSWER SUBMISSION & REAL-TIME SYNC ---
+        // --- ANSWER SUBMISSION AND LOCAL RECORD SYNC ---
         function submitAnswer() {
             const q = selectedQuestions[currentQuestionIdx];
             let studentAnsText = "";
@@ -1339,7 +997,7 @@
                 correctAns: q.type === "MC" ? q.correctAnswer : q.acceptable.join(" / ")
             });
 
-            // Sync updated progress instantly to active database
+            // Sync updated progress instantly to our local database array
             syncQuizProgress("In Progress");
 
             // Display Feedback Panel UI
@@ -1397,10 +1055,74 @@
             }
         }
 
+        // --- DYNAMIC PROGRESS SYNC ENGINE ---
+        function syncQuizProgress(status = "In Progress") {
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString() + ", " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            // Calculate real-time metrics
+            const totalCount = selectedQuestions.length || 18;
+            const scoreCount = quizAnswersLog.filter(a => a.correct).length;
+            const pct = Math.round((scoreCount / totalCount) * 100) || 0;
+            const durationMs = quizStartTime ? (Date.now() - quizStartTime) : 0;
+            const formattedDuration = formatDuration(durationMs);
+
+            // Intermediate Category Breakdowns
+            const topicBreakdown = {};
+            for (const topic in QUESTION_BANK) {
+                topicBreakdown[topic] = 0;
+            }
+            quizAnswersLog.forEach(log => {
+                if (log.correct) {
+                    topicBreakdown[log.topic] = (topicBreakdown[log.topic] || 0) + 1;
+                }
+            });
+
+            // Find weakest topic dynamically so far
+            let weakestTopic = "None";
+            let lowestScore = 4;
+            const completedTopics = new Set(quizAnswersLog.map(l => l.topic));
+            completedTopics.forEach(t => {
+                const logsForTopic = quizAnswersLog.filter(l => l.topic === t);
+                const correctCount = logsForTopic.filter(l => l.correct).length;
+                if (correctCount < lowestScore) {
+                    lowestScore = correctCount;
+                    weakestTopic = t;
+                }
+            });
+
+            const attemptRecord = {
+                id: activeAttemptId,
+                studentName: currentStudentName,
+                timestamp: formattedDate,
+                rawTimestamp: quizStartTime || Date.now(),
+                score: scoreCount,
+                total: totalCount,
+                percentage: pct,
+                timeSpent: formattedDuration,
+                weakestTopic: weakestTopic,
+                status: status, // "In Progress" or "Completed"
+                currentProgress: quizAnswersLog.length,
+                answers: quizAnswersLog,
+                breakdown: topicBreakdown
+            };
+
+            // Write and persist inside browser storage
+            const existingIdx = attemptsDatabase.findIndex(a => a.id === activeAttemptId);
+            if (existingIdx !== -1) {
+                attemptsDatabase[existingIdx] = attemptRecord;
+            } else {
+                attemptsDatabase.unshift(attemptRecord);
+            }
+            
+            saveDatabaseToLocal();
+            renderTeacherAnalytics();
+        }
+
         // --- CONCLUDE ATTEMPT ---
-        async function finishQuiz() {
+        function finishQuiz() {
             // Push final completed sync with state set to "Completed"
-            await syncQuizProgress("Completed");
+            syncQuizProgress("Completed");
 
             // Pull aggregate scores for immediate visual results
             const scoreCount = quizAnswersLog.filter(a => a.correct).length;
@@ -1521,89 +1243,6 @@
             renderTeacherAnalytics();
         }
 
-        // --- DATABASE SECTOR CONFIGURATION HANDLERS ---
-        function openDbConfigModal() {
-            document.getElementById('modal-db-setup').classList.remove('hidden');
-            
-            // clear error divs
-            document.getElementById('db-config-error').classList.add('hidden');
-            document.getElementById('active-diagnostic-card').classList.add('hidden');
-            
-            // pre-load active keys
-            const saved = localStorage.getItem('custom_firebase_config');
-            document.getElementById('db-config-json').value = saved ? saved : "";
-        }
-
-        // --- CLOSES DB CONFIG MODAL ---
-        function closeDbConfigModal() {
-            document.getElementById('modal-db-setup').classList.add('hidden');
-        }
-
-        async function saveCustomFirebaseConfig(e) {
-            e.preventDefault();
-            const errDiv = document.getElementById('db-config-error');
-            errDiv.classList.add('hidden');
-            document.getElementById('active-diagnostic-card').classList.add('hidden');
-
-            const rawValue = document.getElementById('db-config-json').value.trim();
-            if (!rawValue) return;
-
-            let parsedConfig = null;
-            try {
-                // Support extracting JSON keys gracefully
-                parsedConfig = JSON.parse(rawValue);
-            } catch (err) {
-                // If it fails standard JSON, try evaluating as safe JS Object
-                try {
-                    const cleanObjStr = rawValue.replace(/const|let|var|firebaseConfig|=/g, '').trim().replace(/;$/, '');
-                    parsedConfig = Function(`"use strict"; return (${cleanObjStr})`)();
-                } catch (e2) {
-                    errDiv.innerText = "Invalid format. Ensure you paste a clean JSON string or a standard key-value configuration object.";
-                    errDiv.classList.remove('hidden');
-                    return;
-                }
-            }
-
-            // Simple schema validation
-            if (!parsedConfig || !parsedConfig.apiKey || !parsedConfig.projectId || !parsedConfig.appId) {
-                errDiv.innerText = "Configuration is missing core keys. Ensure 'apiKey', 'projectId', and 'appId' are fully populated.";
-                errDiv.classList.remove('hidden');
-                return;
-            }
-
-            try {
-                // Persist credentials locally
-                localStorage.setItem('custom_firebase_config', JSON.stringify(parsedConfig));
-                
-                // Initialize Firebase dynamically
-                await connectToFirebase(parsedConfig);
-                
-                closeDbConfigModal();
-                showCustomToast("Live database connected successfully!", false);
-            } catch (connectionErr) {
-                // Handled gracefully inside connectToFirebase's catch block as well
-            }
-        }
-
-        function disconnectCustomFirebase() {
-            const confirmed = confirm("Are you sure you want to disconnect from your custom database and revert back to offline sandbox mode?");
-            if (!confirmed) return;
-
-            try {
-                localStorage.removeItem('custom_firebase_config');
-            } catch (e) {}
-
-            isDbConnected = false;
-            if (firestoreUnsubscribe) {
-                firestoreUnsubscribe();
-                firestoreUnsubscribe = null;
-            }
-
-            closeDbConfigModal();
-            loadDummyData();
-            showCustomToast("Database disconnected. Reverted to offline mode.", false);
-        }
-
         // --- RENDER TEACHER CONTROL HUB ---
         function renderTeacherAnalytics() {
             const tableBody = document.getElementById('teacher-attempts-body');
@@ -1623,15 +1262,7 @@
                 toughestTopicSpan.innerText = "N/A";
                 tableCountSpan.innerText = "Showing 0 attempts";
                 
-                // Highlight help hints if database is successfully connected but completely blank
-                if (isDbConnected) {
-                    document.getElementById('table-placeholder-text').innerText = "Database Connected: Awaiting Student Submissions";
-                    document.getElementById('table-placeholder-hint').classList.remove('hidden');
-                } else {
-                    document.getElementById('table-placeholder-text').innerText = "No attempts logged yet in this session.";
-                    document.getElementById('table-placeholder-hint').classList.add('hidden');
-                }
-                
+                document.getElementById('table-placeholder-text').innerText = "No attempts logged yet in this session.";
                 placeholder.classList.remove('hidden');
                 return;
             }
@@ -1778,7 +1409,7 @@
                 <div class="flex items-center space-x-2">
                     <span>${att.studentName}'s Live Attempt</span>
                     ${att.status === "In Progress" ? `
-                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-800 animate-pulse font-sans font-sans">
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-800 animate-pulse font-sans">
                             Live Feed
                         </span>
                     ` : ""}
@@ -1807,7 +1438,6 @@
             if (!att.answers || att.answers.length === 0) {
                 listContainer.innerHTML = `
                     <div class="text-center py-8 bg-slate-50 rounded-xl border border-slate-150">
-                        <span class="animate-ping inline-flex h-2.5 w-2.5 rounded-full bg-teal-500 mr-2"></span>
                         <p class="text-xs text-slate-500 font-semibold inline">Student is setting up their quiz. No answers submitted yet...</p>
                     </div>
                 `;
@@ -1816,24 +1446,24 @@
                     const qBox = document.createElement('div');
                     const borderColor = ans.correct ? "border-emerald-100 bg-emerald-50/20" : "border-red-100 bg-red-50/20";
                     const markBadge = ans.correct 
-                        ? `<span class="bg-emerald-100 text-emerald-800 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded">Correct</span>` 
-                        : `<span class="bg-red-100 text-red-800 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded">Incorrect</span>`;
+                        ? `<span class="bg-emerald-100 text-emerald-800 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded font-sans">Correct</span>` 
+                        : `<span class="bg-red-100 text-red-800 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded font-sans">Incorrect</span>`;
 
                     qBox.className = `p-4 border rounded-xl space-y-2 ${borderColor} transition-all`;
                     qBox.innerHTML = `
                         <div class="flex justify-between items-start gap-2">
-                            <span class="text-[10px] font-bold text-slate-400 tracking-wider uppercase">${ans.topic}</span>
+                            <span class="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-sans">${ans.topic}</span>
                             ${markBadge}
                         </div>
-                        <p class="text-xs font-bold text-slate-800 leading-snug">${index + 1}. ${ans.question}</p>
+                        <p class="text-xs font-bold text-slate-800 leading-snug font-sans">${index + 1}. ${ans.question}</p>
                         <div class="text-[11px] grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 border-t border-slate-100">
                             <div>
-                                <span class="text-slate-400 font-semibold block uppercase text-[9px]">Student Answer:</span>
-                                <span class="font-bold text-slate-700">${ans.studentAns || '[Blank]'}</span>
+                                <span class="text-slate-400 font-semibold block uppercase text-[9px] font-sans">Student Answer:</span>
+                                <span class="font-bold text-slate-700 font-sans">${ans.studentAns || '[Blank]'}</span>
                             </div>
                             <div>
-                                <span class="text-slate-400 font-semibold block uppercase text-[9px]">Target Answer:</span>
-                                <span class="font-bold text-teal-800">${ans.correctAns}</span>
+                                <span class="text-slate-400 font-semibold block uppercase text-[9px] font-sans">Target Answer:</span>
+                                <span class="font-bold text-teal-800 font-sans">${ans.correctAns}</span>
                             </div>
                         </div>
                     `;
@@ -1850,30 +1480,17 @@
         }
 
         // --- CLEAR DATABASE SESSION SAMPLES ---
-        async function promptClearAttempts() {
-            const confirmed = confirm("Are you sure you want to clear all quiz logs? This will wipe your live database and your local backups.");
+        function promptClearAttempts() {
+            const confirmed = confirm("Are you sure you want to clear all quiz logs from your local browser dashboard?");
             if (!confirmed) return;
 
-            // Purge local backup immediately
             try {
-                localStorage.removeItem('local_attempts_backup');
+                localStorage.removeItem('biology_quiz_local_attempts');
             } catch (e) {}
 
-            if (isDbConnected && db) {
-                try {
-                    const attemptsCol = collection(db, 'artifacts', appId, 'public', 'data', 'attempts');
-                    const snapshot = await getDocs(attemptsCol);
-                    const deletes = snapshot.docs.map(doc => deleteDoc(doc.ref));
-                    await Promise.all(deletes);
-                    showCustomToast("Database logs and local backups wiped successfully.", false);
-                } catch (e) {
-                    console.error("Wipe failed", e);
-                }
-            } else {
-                attemptsDatabase = [];
-                renderTeacherAnalytics();
-                showCustomToast("In-memory attempts list cleared.", false);
-            }
+            attemptsDatabase = [];
+            renderTeacherAnalytics();
+            showCustomToast("Local session dashboard wiped successfully.", false);
         }
 
         // --- EXPORT METRICS COMPACTOR ---
@@ -1891,9 +1508,9 @@
                 const date = `"${row.timestamp}"`;
                 const score = `${row.score}/18`;
                 const pct = `${row.percentage}%`;
-                const progress = `${row.currentProgress}/18`;
+                const progress = `${row.currentProgress || 0}/18`;
                 const duration = `"${row.timeSpent || 'N/A'}"`;
-                const status = `"${row.status}"`;
+                const status = `"${row.status || 'Completed'}"`;
                 const weakest = `"${row.weakestTopic}"`;
                 csvContent += `${name},${date},${score},${pct},${progress},${duration},${status},${weakest}\n`;
             });
@@ -1901,34 +1518,37 @@
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `BioQuiz_Live_Report_${Date.now()}.csv`);
+            link.setAttribute("download", `BioQuiz_Report_${Date.now()}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             showCustomToast("Class statistics CSV downloaded!", false);
         }
 
-        // --- EXPOSE MODULER FUNCTIONS TO HTML WINDOW INTERFACE ---
-        window.startQuiz = startQuiz;
-        window.restartQuizWithSameUser = restartQuizWithSameUser;
-        window.submitAnswer = submitAnswer;
-        window.nextQuestion = nextQuestion;
-        window.resetToWelcome = resetToWelcome;
-        window.openTeacherAuth = openTeacherAuth;
-        window.closeTeacherAuth = closeTeacherAuth;
-        window.verifyTeacherAuth = verifyTeacherAuth;
-        window.viewAttemptDetail = viewAttemptDetail;
-        window.closeAttemptDetail = closeAttemptDetail;
-        window.promptClearAttempts = promptClearAttempts;
-        window.exportToCSV = exportToCSV;
-        window.openDbConfigModal = openDbConfigModal;
-        window.closeDbConfigModal = closeDbConfigModal;
-        window.saveCustomFirebaseConfig = saveCustomFirebaseConfig;
-        window.disconnectCustomFirebase = disconnectCustomFirebase;
+        // --- TOAST NOTIFICATIONS ---
+        function showCustomToast(message, isError = false) {
+            const toast = document.getElementById('toast-notice');
+            const messageSpan = document.getElementById('toast-message');
+            messageSpan.innerText = message;
+            
+            if (isError) {
+                toast.className = "fixed bottom-4 right-4 bg-red-950 text-red-200 text-xs font-semibold px-4 py-3 rounded-xl shadow-lg transform transition-all duration-300 z-50 flex items-center space-x-2 border border-red-800";
+            } else {
+                toast.className = "fixed bottom-4 right-4 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-lg transform transition-all duration-300 z-50 flex items-center space-x-2";
+            }
+            
+            // Slide in
+            toast.classList.remove('opacity-0', 'translate-y-24');
+            
+            // Slide out after 3 seconds
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-24');
+            }, 3000);
+        }
 
-        // Boot-up initialization sequence
+        // Initialize immediately as a clean, normal, synchronous offline block
         resetToWelcome();
-        startupBootSequence();
+        loadDatabaseFromLocal();
 
     </script>
 </body>
