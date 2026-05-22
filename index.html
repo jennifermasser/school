@@ -58,8 +58,8 @@
                 <div>
                     <div class="flex items-center space-x-2">
                         <h1 class="font-bold text-lg text-slate-900 tracking-tight leading-tight">BioLab Quizzer</h1>
-                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-teal-100 text-teal-800">
-                            Live Sync
+                        <span id="header-sync-badge" class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500">
+                            Offline Mode
                         </span>
                     </div>
                     <p class="text-xs text-slate-500 font-medium">HS Biology NGSS Practice</p>
@@ -252,10 +252,17 @@
             <!-- Header bar for dashboard -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900 p-6 rounded-2xl text-white shadow-md">
                 <div>
-                    <span class="text-teal-400 text-xs font-bold uppercase tracking-wider">Teacher Control Hub</span>
+                    <span class="text-teal-400 text-xs font-bold uppercase tracking-wider font-mono">Teacher Control Hub</span>
                     <h2 class="text-2xl font-extrabold mt-1">Classroom Progress Analytics</h2>
                 </div>
                 <div class="flex flex-wrap gap-2">
+                    <button onclick="openDbConfigModal()" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold flex items-center space-x-1 border border-amber-500 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Configure Database</span>
+                    </button>
                     <button onclick="exportToCSV()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold flex items-center space-x-1 border border-slate-700 transition-colors">
                         <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -296,12 +303,9 @@
                 <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50/50">
                     <div class="flex items-center space-x-2">
                         <h3 class="font-bold text-slate-900 text-sm">Completed Student Attempts</h3>
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 flex items-center">
-                            <span class="relative flex h-1.5 w-1.5 mr-1">
-                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                              <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500"></span>
-                            </span>
-                            Live Feed Active
+                        <span id="live-feed-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 flex items-center">
+                            <span class="w-1.5 h-1.5 rounded-full bg-slate-400 mr-1.5"></span>
+                            Local Sandbox Feed
                         </span>
                     </div>
                     <span class="text-xs text-slate-500" id="table-record-count">Showing 0 attempts</span>
@@ -365,6 +369,47 @@
                     <div class="flex space-x-2 pt-2">
                         <button type="button" onclick="closeTeacherAuth()" class="w-1/2 py-2 border border-slate-200 text-slate-600 text-xs font-semibold rounded-lg hover:bg-slate-50">Cancel</button>
                         <button type="submit" class="w-1/2 py-2 bg-slate-900 hover:bg-black text-white text-xs font-semibold rounded-lg">Authorize</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Connection Config Modal -->
+    <div id="modal-db-setup" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden border border-slate-100 flex flex-col max-h-[90vh]">
+            <div class="p-6 border-b border-slate-150">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center">
+                    <svg class="w-5 h-5 text-amber-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                    Configure Custom Firestore Database
+                </h3>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                    Connecting to your own Firebase project enables secure, real-time cross-tab & cross-device student tracking on any hosted website.
+                </p>
+            </div>
+            <div class="p-6 overflow-y-auto custom-scrollbar space-y-4 flex-grow text-xs text-slate-600">
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-150 space-y-1.5 leading-relaxed">
+                    <span class="font-bold text-slate-800 block">How to get keys:</span>
+                    1. Go to your <a href="https://console.firebase.google.com/" target="_blank" class="text-teal-600 hover:underline font-semibold">Firebase Console</a>.<br>
+                    2. Create or open a project and register a **Web App**.<br>
+                    3. Enable **Anonymous Sign-In** inside Firebase Auth.<br>
+                    4. Enable **Cloud Firestore** database (allow Public/Test Read/Write rules on `/artifacts/*`).<br>
+                    5. Paste the exact `firebaseConfig` keys below.
+                </div>
+                <form id="form-db-config" onsubmit="saveCustomFirebaseConfig(event)" class="space-y-3">
+                    <div>
+                        <label for="db-config-json" class="block font-bold text-slate-700 uppercase tracking-wider mb-1.5">Firebase Configuration JSON / Object</label>
+                        <textarea id="db-config-json" required rows="6" placeholder='e.g.&#10;{&#10;  "apiKey": "AIzaSy...",&#10;  "authDomain": "myproject.firebaseapp.com",&#10;  "projectId": "myproject-123",&#10;  "appId": "1:2345:web:abcd..."&#10;}'
+                            class="w-full font-mono px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-[11px]"></textarea>
+                    </div>
+                    <div id="db-config-error" class="hidden p-2 text-red-800 bg-red-50 border border-red-200 rounded-lg font-medium"></div>
+                    
+                    <div class="flex justify-end space-x-2 pt-2 border-t border-slate-100">
+                        <button type="button" onclick="closeDbConfigModal()" class="px-4 py-2 border border-slate-200 text-slate-600 font-semibold rounded-lg hover:bg-slate-50">Cancel</button>
+                        <button type="button" onclick="disconnectCustomFirebase()" class="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-700 font-semibold rounded-lg">Disconnect Custom DB</button>
+                        <button type="submit" class="px-4 py-2 bg-teal-700 hover:bg-teal-800 text-white font-semibold rounded-lg">Save & Connect</button>
                     </div>
                 </form>
             </div>
@@ -761,49 +806,113 @@
         let db = null;
         let auth = null;
         let appId = typeof __app_id !== 'undefined' ? __app_id : 'default-biology-app';
+        let firestoreUnsubscribe = null;
 
-        // Graceful initialization block matching core guidelines
-        try {
-            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                const firebaseConfig = JSON.parse(__firebase_config);
-                const app = initializeApp(firebaseConfig);
+        // --- DYNAMIC DATABASE INITIALIZER ---
+        async function connectToFirebase(config) {
+            try {
+                // Unsubscribe from any active database listener first
+                if (firestoreUnsubscribe) {
+                    firestoreUnsubscribe();
+                }
+
+                const app = initializeApp(config);
                 auth = getAuth(app);
                 db = getFirestore(app);
 
-                const initAuth = async () => {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                };
+                // Authentication prior to operations matching RULE 3
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
 
-                initAuth().then(() => {
-                    isDbConnected = true;
-                    // Listen to attempts in real-time
-                    const attemptsCol = collection(db, 'artifacts', appId, 'public', 'data', 'attempts');
-                    onSnapshot(attemptsCol, (snapshot) => {
-                        const syncedAttempts = [];
-                        snapshot.forEach((doc) => {
-                            syncedAttempts.push(doc.data());
-                        });
-                        // Sort by timestamp descending
-                        attemptsDatabase = syncedAttempts.sort((a, b) => b.rawTimestamp - a.rawTimestamp);
-                        renderTeacherAnalytics();
-                    }, (err) => {
-                        console.error("Firestore subscription error:", err);
+                isDbConnected = true;
+                updateHeaderConnectionUI(true, config.projectId);
+
+                // Active snapshot listener using strict path rules matching RULE 1
+                const attemptsCol = collection(db, 'artifacts', appId, 'public', 'data', 'attempts');
+                firestoreUnsubscribe = onSnapshot(attemptsCol, (snapshot) => {
+                    const syncedAttempts = [];
+                    snapshot.forEach((doc) => {
+                        syncedAttempts.push(doc.data());
                     });
-                }).catch(err => {
-                    console.warn("Auth initialization failed. Operating in-memory mode.", err);
-                    loadDummyData();
+                    attemptsDatabase = syncedAttempts.sort((a, b) => b.rawTimestamp - a.rawTimestamp);
+                    renderTeacherAnalytics();
+                }, (err) => {
+                    console.error("Firestore live feed subscription failed:", err);
+                    showCustomToast("Database connected but failed subscription. Review security rules!", true);
                 });
+
+            } catch (err) {
+                console.error("Firebase Connection Setup Failed:", err);
+                isDbConnected = false;
+                updateHeaderConnectionUI(false);
+                throw err;
+            }
+        }
+
+        // --- CONNECTION STATUS UPDATE HANDLER ---
+        function updateHeaderConnectionUI(connected, projectId = "") {
+            const hBadge = document.getElementById('header-sync-badge');
+            const tableBadge = document.getElementById('live-feed-badge');
+
+            if (connected) {
+                hBadge.innerText = `Connected: ${projectId}`;
+                hBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-800";
+                
+                tableBadge.innerHTML = `
+                    <span class="relative flex h-1.5 w-1.5 mr-1.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                    </span>
+                    Live Shared Database Active
+                `;
+                tableBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 flex items-center";
+            } else {
+                hBadge.innerText = "Offline Mode";
+                hBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500";
+                
+                tableBadge.innerHTML = `
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400 mr-1.5"></span>
+                    Local Sandbox Feed
+                `;
+                tableBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 flex items-center";
+            }
+        }
+
+        // --- AUTOMATED IN-MEMORY STARTUP HANDLER ---
+        const startupBootSequence = async () => {
+            // Check for user-pasted custom storage settings
+            let savedConfigStr = null;
+            try {
+                savedConfigStr = localStorage.getItem('custom_firebase_config');
+            } catch (e) {}
+
+            if (savedConfigStr) {
+                try {
+                    const parsedConfig = JSON.parse(savedConfigStr);
+                    await connectToFirebase(parsedConfig);
+                    return;
+                } catch (e) {
+                    console.warn("Saved custom configuration invalid. Purging local entry.", e);
+                    try { localStorage.removeItem('custom_firebase_config'); } catch(err){}
+                }
+            }
+
+            // Fallback: check environment injection keys
+            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                try {
+                    const parsedConfig = JSON.parse(__firebase_config);
+                    await connectToFirebase(parsedConfig);
+                } catch (e) {
+                    console.error("Environment config parsed poorly:", e);
+                    loadDummyData();
+                }
             } else {
                 loadDummyData();
             }
-        } catch (e) {
-            console.warn("Firebase not loaded: operating in-memory mode.", e);
-            loadDummyData();
-        }
+        };
 
         function loadDummyData() {
             attemptsDatabase = [
@@ -867,6 +976,7 @@
                     breakdown: { "Photosynthesis": 3, "Cellular Respiration": 2, "Mitosis": 1, "Meiosis": 0, "DNA Structure": 0, "DNA Replication": 0 }
                 }
             ];
+            updateHeaderConnectionUI(false);
             renderTeacherAnalytics();
         }
 
@@ -1326,6 +1436,86 @@
             renderTeacherAnalytics();
         }
 
+        // --- DATABASE SECTOR CONFIGURATION HANDLERS ---
+        function openDbConfigModal() {
+            document.getElementById('modal-db-setup').classList.remove('hidden');
+            document.getElementById('db-config-error').classList.add('hidden');
+            
+            // pre-load active keys
+            const saved = localStorage.getItem('custom_firebase_config');
+            document.getElementById('db-config-json').value = saved ? saved : "";
+        }
+
+        function closeDbConfigModal() {
+            document.getElementById('modal-db-setup').classList.add('hidden');
+        }
+
+        async function saveCustomFirebaseConfig(e) {
+            e.preventDefault();
+            const errDiv = document.getElementById('db-config-error');
+            errDiv.classList.add('hidden');
+
+            const rawValue = document.getElementById('db-config-json').value.trim();
+            if (!rawValue) return;
+
+            let parsedConfig = null;
+            try {
+                // Support extracting JSON keys gracefully
+                parsedConfig = JSON.parse(rawValue);
+            } catch (err) {
+                // If it fails standard JSON, try evaluating as safe JS Object
+                try {
+                    const cleanObjStr = rawValue.replace(/const|let|var|firebaseConfig|=/g, '').trim().replace(/;$/, '');
+                    parsedConfig = Function(`"use strict"; return (${cleanObjStr})`)();
+                } catch (e2) {
+                    errDiv.innerText = "Invalid format. Ensure you paste a clean JSON string or a standard key-value configuration object.";
+                    errDiv.classList.remove('hidden');
+                    return;
+                }
+            }
+
+            // Simple schema validation
+            if (!parsedConfig || !parsedConfig.apiKey || !parsedConfig.projectId || !parsedConfig.appId) {
+                errDiv.innerText = "Configuration is missing core keys. Ensure 'apiKey', 'projectId', and 'appId' are fully populated.";
+                errDiv.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                // Persist credentials locally
+                localStorage.setItem('custom_firebase_config', JSON.stringify(parsedConfig));
+                
+                // Initialize Firebase dynamically
+                await connectToFirebase(parsedConfig);
+                
+                closeDbConfigModal();
+                showCustomToast("Live database connected successfully!", false);
+            } catch (connectionErr) {
+                errDiv.innerText = "Failed connection: " + connectionErr.message;
+                errDiv.classList.remove('hidden');
+                try { localStorage.removeItem('custom_firebase_config'); } catch(err){}
+            }
+        }
+
+        function disconnectCustomFirebase() {
+            const confirmed = confirm("Are you sure you want to disconnect from your custom database and revert back to offline sandbox mode?");
+            if (!confirmed) return;
+
+            try {
+                localStorage.removeItem('custom_firebase_config');
+            } catch (e) {}
+
+            isDbConnected = false;
+            if (firestoreUnsubscribe) {
+                firestoreUnsubscribe();
+                firestoreUnsubscribe = null;
+            }
+
+            closeDbConfigModal();
+            loadDummyData();
+            showCustomToast("Database disconnected. Reverted to offline mode.", false);
+        }
+
         // --- RENDER TEACHER CONTROL HUB ---
         function renderTeacherAnalytics() {
             const tableBody = document.getElementById('teacher-attempts-body');
@@ -1390,7 +1580,7 @@
 
                 if (att.status === "Completed") {
                     statusBadge = `
-                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-green-50 text-green-700 border border-green-200">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-green-50 text-green-700 border border-green-200 font-sans">
                             Completed
                         </span>
                     `;
@@ -1404,7 +1594,7 @@
                 } else {
                     // "In Progress" Real-Time Tracking Badge
                     statusBadge = `
-                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200 font-sans">
                             <span class="relative flex h-1.5 w-1.5 mr-1">
                               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                               <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500"></span>
@@ -1420,8 +1610,8 @@
                 const progressPct = Math.round((att.currentProgress / att.total) * 100) || 0;
                 const progressCell = `
                     <div class="space-y-1 py-1">
-                        <div class="flex justify-between text-[10px] text-slate-500">
-                            <span class="font-semibold">${att.currentProgress}/${att.total} Qs</span>
+                        <div class="flex justify-between text-[10px] text-slate-500 font-medium">
+                            <span>${att.currentProgress}/${att.total} Qs</span>
                             <span>${progressPct}%</span>
                         </div>
                         <div class="w-24 bg-slate-200 h-1.5 rounded-full overflow-hidden">
@@ -1628,6 +1818,16 @@
         window.closeAttemptDetail = closeAttemptDetail;
         window.promptClearAttempts = promptClearAttempts;
         window.exportToCSV = exportToCSV;
+        window.openDbConfigModal = openDbConfigModal;
+        window.closeDbConfigModal = closeDbConfigModal;
+        window.saveCustomFirebaseConfig = saveCustomFirebaseConfig;
+        window.disconnectCustomFirebase = disconnectCustomFirebase;
+
+        // Boot-up initialization sequence
+        window.onload = function() {
+            resetToWelcome();
+            startupBootSequence();
+        };
 
     </script>
 </body>
