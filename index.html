@@ -1787,7 +1787,7 @@
                 <div class="flex items-center space-x-2">
                     <span>${att.studentName}'s Live Attempt</span>
                     ${att.status === "In Progress" ? `
-                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-800 animate-pulse font-sans">
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-800 animate-pulse font-sans font-sans">
                             Live Feed
                         </span>
                     ` : ""}
@@ -1936,10 +1936,8 @@
         window.disconnectCustomFirebase = disconnectCustomFirebase;
 
         // Boot-up initialization sequence
-        window.onload = function() {
-            resetToWelcome();
-            startupBootSequence();
-        };
+        resetToWelcome();
+        startupBootSequence();
 
     </script>
 </body>
