@@ -189,16 +189,24 @@
                 </div>
 
                 <!-- Footer Control Buttons -->
-                <div class="mt-8 pt-6 border-t border-slate-100 flex justify-end">
-                    <button id="btn-submit-answer" onclick="submitAnswer()" class="bg-teal-700 hover:bg-teal-800 text-white font-bold px-6 py-3 rounded-xl transition-all shadow-md shadow-teal-700/10 active:scale-95">
-                        Submit Answer
-                    </button>
-                    <button id="btn-next-question" onclick="nextQuestion()" class="hidden bg-slate-900 hover:bg-black text-white font-bold px-6 py-3 rounded-xl transition-all shadow-md active:scale-95 flex items-center space-x-1">
-                        <span>Next Question</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                <div class="mt-8 pt-6 border-t border-slate-100 flex justify-between items-center">
+                    <div id="quiz-timer" class="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+                        <svg class="w-4 h-4 text-slate-400 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="animation-duration: 4s;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                    </button>
+                        <span id="timer-display">Elapsed: 00:00</span>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button id="btn-submit-answer" onclick="submitAnswer()" class="bg-teal-700 hover:bg-teal-800 text-white font-bold px-6 py-3 rounded-xl transition-all shadow-md shadow-teal-700/10 active:scale-95">
+                            Submit Answer
+                        </button>
+                        <button id="btn-next-question" onclick="nextQuestion()" class="hidden bg-slate-900 hover:bg-black text-white font-bold px-6 py-3 rounded-xl transition-all shadow-md active:scale-95 flex items-center space-x-1">
+                            <span>Next Question</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -215,7 +223,7 @@
 
                 <span class="text-xs font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-100">Quiz Completed!</span>
                 <h2 class="text-3xl font-extrabold text-slate-950 mt-3" id="results-greeting">Great Job!</h2>
-                <p class="text-slate-500 text-sm mt-1">Your final response was successfully recorded and dispatched to Google Sheets.</p>
+                <p class="text-slate-500 text-sm mt-1" id="results-save-feedback">Your final response was successfully recorded and synchronized.</p>
 
                 <!-- Score Circular Display -->
                 <div class="my-8 flex justify-center items-center">
@@ -285,6 +293,29 @@
                 </div>
             </div>
 
+            <!-- Filter and Period selector row -->
+            <div class="bg-white border border-slate-200 p-4 rounded-xl flex flex-col md:flex-row gap-3 items-center justify-between">
+                <div class="relative w-full md:max-w-xs">
+                    <input type="text" id="teacher-search" oninput="filterAttemptsTable()" placeholder="Search students..."
+                        class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                <div class="flex space-x-2 w-full md:w-auto">
+                    <select id="teacher-period-filter" onchange="filterAttemptsTable()" class="w-full md:w-40 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+                        <option value="ALL">All Periods</option>
+                        <option value="Period 1">Period 1</option>
+                        <option value="Period 2">Period 2</option>
+                        <option value="Period 3">Period 3</option>
+                        <option value="Period 4">Period 4</option>
+                        <option value="Period 5">Period 5</option>
+                        <option value="Period 6">Period 6</option>
+                        <option value="Period 7">Period 7</option>
+                    </select>
+                </div>
+            </div>
+
             <!-- Stats Overview Cards -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
@@ -311,8 +342,8 @@
                     <div class="flex items-center space-x-2">
                         <h3 class="font-bold text-slate-900 text-sm">Classroom Practice Logs</h3>
                         <span id="live-feed-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 flex items-center">
-                            <span class="w-1.5 h-1.5 rounded-full bg-slate-400 mr-1.5 animate-pulse"></span>
-                            Local Sync Active
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
+                            Live Sync Active
                         </span>
                     </div>
                     <span class="text-xs text-slate-500" id="table-record-count">Showing 0 attempts</span>
@@ -357,6 +388,49 @@
     </footer>
 
     <!-- ================= MODALS & OVERLAYS ================= -->
+    <!-- Active Session Resume Prompt Modal -->
+    <div id="modal-resume" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-slate-100 transform scale-95 transition-all">
+            <div class="p-6">
+                <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 6H16"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">In-Progress Quiz Found!</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                    Hello <span id="resume-student-highlight" class="font-semibold text-slate-800"></span>, we found an unfinished practice attempt from your current class period (<span id="resume-period-highlight" class="font-medium text-slate-850"></span>).
+                </p>
+
+                <div class="my-4 p-3 bg-slate-50 border border-slate-150 rounded-xl space-y-1.5 text-xs text-slate-650">
+                    <div class="flex justify-between">
+                        <span>Last Active:</span>
+                        <span id="resume-timestamp" class="font-semibold text-slate-800"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Completed Progress:</span>
+                        <span id="resume-progress" class="font-bold text-teal-700"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Time Spent So Far:</span>
+                        <span id="resume-timer" class="font-mono text-slate-700"></span>
+                    </div>
+                </div>
+
+                <p class="text-[11px] text-slate-400">Would you like to recover your work or discard it and start fresh?</p>
+
+                <div class="flex space-x-2 pt-4">
+                    <button type="button" onclick="discardAndStartFresh()" class="w-1/2 py-2.5 border border-red-200 text-red-650 hover:bg-red-50 text-xs font-semibold rounded-lg transition-colors">
+                        Discard &amp; Restart
+                    </button>
+                    <button type="button" onclick="confirmResumeSession()" class="w-1/2 py-2.5 bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold rounded-lg shadow-md shadow-teal-700/10 transition-colors">
+                        Resume Session
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Password Authentication Modal -->
     <div id="modal-auth" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden border border-slate-100 transform scale-95 transition-all">
@@ -367,7 +441,7 @@
                     </svg>
                 </div>
                 <h3 class="text-lg font-bold text-slate-900">Teacher Password Required</h3>
-                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Access is restricted to course coordinators. Please enter the recovery key.</p>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">Access is restricted to course coordinators. Please enter the recovery key (Default: <code class="bg-slate-100 px-1 py-0.5 rounded font-mono font-bold">bioadmin</code>).</p>
                 
                 <form id="form-auth" onsubmit="verifyTeacherAuth(event)" class="mt-4 space-y-3">
                     <input type="password" id="auth-password" required placeholder="Enter password"
@@ -386,7 +460,7 @@
     <!-- Webhook Connection Config Modal -->
     <div id="modal-db-setup" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden border border-slate-100 flex flex-col max-h-[90vh]">
-            <div class="p-6 border-b border-slate-150">
+            <div class="p-6 border-b border-slate-155">
                 <h3 class="text-lg font-bold text-slate-900 flex items-center">
                     <svg class="w-5 h-5 text-amber-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
@@ -434,7 +508,7 @@
                 </button>
             </div>
 
-            <div class="p-6 overflow-y-auto custom-scrollbar flex-grow space-y-4">
+            <div class="p-6 overflow-y-auto custom-scrollbar flex-grow space-y-4 text-slate-700">
                 <!-- Top stats -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
                     <div>
@@ -446,1301 +520,1373 @@
                         <span id="detail-percent" class="text-xl font-extrabold text-teal-700">77%</span>
                     </div>
                     <div>
-                        <span class="text-xs text-slate-500 block">Time Taken</span>
-                        <span id="detail-time-spent" class="text-xl font-extrabold text-slate-900">4m 12s</span>
+                        <span class="text-xs text-slate-500 block">Class Period</span>
+                        <span id="detail-period" class="text-xl font-extrabold text-indigo-700">Period 1</span>
                     </div>
                     <div>
-                        <span class="text-xs text-slate-500 block">Status</span>
-                        <span id="detail-status" class="text-xs font-bold text-white bg-green-600 px-2 py-0.5 rounded-full inline-block mt-1">PASS</span>
+                        <span class="text-xs text-slate-500 block">Time Spent</span>
+                        <span id="detail-duration" class="text-xl font-extrabold text-amber-700">03:45</span>
                     </div>
                 </div>
 
-                <!-- Complete Question Log -->
+                <!-- Custom topic analysis inside detailed view modal -->
                 <div>
-                    <h4 class="font-bold text-sm text-slate-900 mb-3">Live Question Audit Log</h4>
-                    <div id="detail-question-list" class="space-y-3">
-                        <!-- Questions mapped dynamically -->
+                    <h4 class="font-bold text-xs text-slate-450 uppercase tracking-wider mb-2">Subject Area Breakdown</h4>
+                    <div id="detail-subject-breakdown" class="space-y-2">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+                <!-- Dynamic Detailed Responses inside detailed view modal -->
+                <div>
+                    <h4 class="font-bold text-xs text-slate-450 uppercase tracking-wider mb-2">Detailed Student Responses</h4>
+                    <div id="detail-responses-container" class="space-y-3">
+                        <!-- Filled by JS -->
                     </div>
                 </div>
             </div>
-
-            <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
-                <button onclick="closeAttemptDetail()" class="px-5 py-2 bg-slate-900 hover:bg-black text-white text-xs font-semibold rounded-lg">Close Audit</button>
+            
+            <div class="p-4 border-t border-slate-100 bg-slate-50 flex justify-end">
+                <button onclick="closeAttemptDetail()" class="px-5 py-2 bg-slate-900 hover:bg-black text-white rounded-lg text-xs font-semibold">
+                    Close Details
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Global Notice Banner for Feedback -->
-    <div id="toast-notice" class="fixed bottom-4 right-4 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-lg transform translate-y-24 opacity-0 transition-all duration-300 z-50 flex items-center space-x-2">
-        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-        </svg>
-        <span id="toast-message">Data successfully exported!</span>
-    </div>
-
-    <!-- ================= JAVASCRIPT SYSTEM & LOCAL STORAGE ENGINE ================= -->
+    <!-- Embedded State Engine & Logic Script -->
     <script>
-        // =========================================================================
-        // 🌟 QUICK CUSTOM CONFIGURATION: HARDCODED APPS SCRIPT WEBHOOK URL
-        // =========================================================================
-        // If you would like to hardcode your Google Apps Script Web App URL so that
-        // students do not have to configure anything, paste your URL inside the quotes:
-        // =========================================================================
-       const HARDCODED_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbz4uKZRdgAoAI0ke_hiaZyFBSKBn7FZ7R0vo5fAVSlRBL8HQYoAIdMBYGdjdjU4o9Wt/exec";
-        // Example: "https://script.google.com/macros/s/AKfycbwPz.../exec"
-        // =========================================================================
-
-        // --- MASTER QUESTION REPOSITORY ---
-        const QUESTION_BANK = {
+        // ================= BIOLOGY DYNAMIC BANK =================
+        const BIOLOGY_QUESTION_BANK = {
             "Photosynthesis": [
                 {
-                    type: "MC",
-                    text: "What is the primary organelle where plants transform radiant solar energy into stable chemical energy?",
-                    options: ["Chloroplast", "Mitochondria", "Nucleus", "Ribosome"],
-                    correctAnswer: "Chloroplast",
-                    explanation: "Photosynthesis occurs inside the chloroplast, which contains specialized plant pigments to capture light energy."
-                },
-                {
-                    type: "SA",
-                    text: "What carbon-rich gas must plants absorb from the atmosphere as a main starting reactant to construct sugar molecules?",
-                    acceptable: ["carbon dioxide", "co2"],
-                    explanation: "Plants absorb carbon dioxide ($CO_2$) gas and combine its carbon atoms with hydrogen to synthesize sugars."
-                },
-                {
-                    type: "MC",
-                    text: "Which of the following describes the basic transfer of energy during photosynthesis?",
+                    id: "photo_1",
+                    topic: "Photosynthesis",
+                    type: "Multiple Choice",
+                    question: "Which of the following molecules acts as the main terminal electron acceptor in the light-dependent reactions, ultimately becoming reduced to NADPH?",
                     options: [
-                        "Light energy is captured and stored as chemical energy within sugar molecules.",
-                        "Chemical energy from food is transformed directly into solar light energy.",
-                        "Heat energy is destroyed to manufacture carbon atoms from nothing.",
-                        "Water is split to release electricity directly into the plant cell."
+                        "NADP+",
+                        "Water (H2O)",
+                        "Carbon Dioxide (CO2)",
+                        "Oxygen (O2)"
                     ],
-                    correctAnswer: "Light energy is captured and stored as chemical energy within sugar molecules.",
-                    explanation: "Photosynthesis is an energy transformation process where solar light energy is converted into chemical potential energy inside the chemical bonds of glucose."
+                    answer: "NADP+",
+                    explanation: "NADP+ is reduced to NADPH at the end of the electron transport chain in Photosystem I, functioning as a high-energy electron carrier for the Calvin Cycle."
                 },
                 {
-                    type: "SA",
-                    text: "What gaseous matter molecule is released by plants into the surrounding atmosphere as a byproduct of splitting water?",
-                    acceptable: ["oxygen", "o2", "oxygen gas"],
-                    explanation: "When plants split water molecules during photosynthesis, oxygen gas ($O_2$) is released into the atmosphere."
-                },
-                {
-                    type: "MC",
-                    text: "Which group of chemical substances contains the primary matter inputs (reactants) needed for a plant to run photosynthesis?",
+                    id: "photo_2",
+                    topic: "Photosynthesis",
+                    type: "Multiple Choice",
+                    question: "During photosynthesis, where do light-independent reactions (Calvin Cycle) take place within the chloroplast?",
                     options: [
-                        "Carbon dioxide and water",
-                        "Oxygen and glucose",
-                        "Carbon dioxide and glucose",
-                        "Oxygen and water"
+                        "Stroma",
+                        "Thylakoid Membrane",
+                        "Intermembrane Space",
+                        "Granum"
                     ],
-                    correctAnswer: "Carbon dioxide and water",
-                    explanation: "In the presence of light, plants require carbon dioxide and water to synthesize glucose and release oxygen."
+                    answer: "Stroma",
+                    explanation: "The Calvin Cycle occurs in the stroma (the fluid-filled space of the chloroplast), utilizing the ATP and NADPH produced by the light-dependent reactions to fix carbon."
                 },
                 {
-                    type: "SA",
-                    text: "What is the primary green pigment in plants that is responsible for absorbing the sunlight required for photosynthesis?",
-                    acceptable: ["chlorophyll"],
-                    explanation: "Chlorophyll is the key light-absorbing pigment that captures solar energy and gives plant systems their green coloration."
+                    id: "photo_3",
+                    topic: "Photosynthesis",
+                    type: "Multiple Choice",
+                    question: "What is the primary biological objective of splitting water molecules ($H_2O$) during light reactions?",
+                    options: [
+                        "To provide electrons to replace those lost by Photosystem II",
+                        "To generate oxygen gas for the mitochondria",
+                        "To balance the pH of the stroma",
+                        "To directly synthesize G3P sugar"
+                    ],
+                    answer: "To provide electrons to replace those lost by Photosystem II",
+                    explanation: "Photolysis splits water to harvest electrons for Photosystem II. Oxygen gas is released as a byproduct."
+                },
+                {
+                    id: "photo_4",
+                    topic: "Photosynthesis",
+                    type: "Multiple Choice",
+                    question: "Which specific pigment molecule sits at the reaction center of both Photosystem II and Photosystem I?",
+                    options: [
+                        "Chlorophyll a",
+                        "Chlorophyll b",
+                        "Carotenoids",
+                        "Xanthophyll"
+                    ],
+                    answer: "Chlorophyll a",
+                    explanation: "Chlorophyll a is the essential pigment at the reaction center, directly involved in converting light energy to chemical energy."
+                },
+                {
+                    id: "photo_5",
+                    topic: "Photosynthesis",
+                    type: "Multiple Choice",
+                    question: "What enzyme catalyzes the primary carbon fixation reaction in the Calvin Cycle by joining $CO_2$ with RuBP?",
+                    options: [
+                        "RuBisCO",
+                        "ATP Synthase",
+                        "Amylase",
+                        "PEP Carboxylase"
+                    ],
+                    answer: "RuBisCO",
+                    explanation: "RuBisCO is the highly abundant enzyme responsible for fixing atmospheric carbon dioxide into organic molecules."
                 }
             ],
             "Cellular Respiration": [
                 {
-                    type: "MC",
-                    text: "What is the primary organelle responsible for breaking down sugar molecules to release highly usable chemical energy (ATP)?",
-                    options: ["Mitochondria", "Chloroplast", "Nucleus", "Vacuole"],
-                    correctAnswer: "Mitochondria",
-                    explanation: "The mitochondria break down sugars during cellular respiration, storing the released energy in ATP molecules."
-                },
-                {
-                    type: "SA",
-                    text: "What is the three-letter abbreviation of the primary energy currency molecule generated during cellular respiration?",
-                    acceptable: ["atp"],
-                    explanation: "ATP (Adenosine Triphosphate) is the main molecule that cell systems use to perform mechanical work and transport matter."
-                },
-                {
-                    type: "MC",
-                    text: "What is the ultimate biological goal of cellular respiration in living organisms?",
+                    id: "resp_1",
+                    topic: "Cellular Respiration",
+                    type: "Multiple Choice",
+                    question: "During which phase of aerobic cellular respiration is the largest volume of ATP generated?",
                     options: [
-                        "To break down food to yield usable chemical energy for the cell.",
-                        "To convert water and carbon dioxide into simple sugars.",
-                        "To release oxygen gas as a waste product into the air.",
-                        "To duplicate chromosomes before cell division."
+                        "Electron Transport Chain & Oxidative Phosphorylation",
+                        "Glycolysis",
+                        "Krebs Cycle (Citric Acid Cycle)",
+                        "Link Reaction"
                     ],
-                    correctAnswer: "To break down food to yield usable chemical energy for the cell.",
-                    explanation: "The primary purpose of respiration is to extract chemical energy stored within food (like glucose) and convert it into ATP."
+                    answer: "Electron Transport Chain & Oxidative Phosphorylation",
+                    explanation: "Oxidative phosphorylation powered by the Electron Transport Chain produces about 26 to 28 ATP molecules per glucose, compared to 2 ATP from Glycolysis and 2 ATP from the Krebs Cycle."
                 },
                 {
-                    type: "SA",
-                    text: "What gas must aerobic organisms take in from their environment to successfully run cellular respiration?",
-                    acceptable: ["oxygen", "o2", "oxygen gas"],
-                    explanation: "Oxygen ($O_2$) is the critical matter input required to fully break down glucose during aerobic cellular respiration."
-                },
-                {
-                    type: "MC",
-                    text: "How do photosynthesis and cellular respiration work together to cycle matter in an ecosystem?",
+                    id: "resp_2",
+                    topic: "Cellular Respiration",
+                    type: "Multiple Choice",
+                    question: "Glycolysis takes place in which region of a eukaryotic cell?",
                     options: [
-                        "The products of photosynthesis (glucose and oxygen) act as the reactants for cellular respiration.",
-                        "Photosynthesis destroys carbon matter while respiration creates brand-new carbon atoms.",
-                        "Both systems convert sugars directly into radiant sunlight to warm up ecosystems.",
-                        "Photosynthesis only happens in animals, while respiration only happens in plants."
+                        "Cytoplasm",
+                        "Mitochondrial Matrix",
+                        "Mitochondrial Inner Membrane",
+                        "Lysosome"
                     ],
-                    correctAnswer: "The products of photosynthesis (glucose and oxygen) act as the reactants for cellular respiration.",
-                    explanation: "These systems cycle carbon, oxygen, and hydrogen: the glucose and oxygen released by plants are utilized by organisms to perform cellular respiration, which in turn outputs carbon dioxide and water."
+                    answer: "Cytoplasm",
+                    explanation: "Glycolysis is an anaerobic pathway that breaks down glucose into pyruvate. It occurs exclusively in the cytosol/cytoplasm."
                 },
                 {
-                    type: "SA",
-                    text: "What simple sugar carbohydrate molecule is the primary fuel source broken down during respiration?",
-                    acceptable: ["glucose", "sugar"],
-                    explanation: "Glucose ($C_6H_{12}O_6$) is the basic carbon-based sugar molecule that organisms oxidize during cellular respiration."
+                    id: "resp_3",
+                    topic: "Cellular Respiration",
+                    type: "Multiple Choice",
+                    question: "What is the final electron acceptor in the mitochondrial aerobic electron transport chain?",
+                    options: [
+                        "Oxygen ($O_2$)",
+                        "Water ($H_2O$)",
+                        "Carbon Dioxide ($CO_2$)",
+                        "NAD+"
+                    ],
+                    answer: "Oxygen ($O_2$)",
+                    explanation: "Oxygen acts as the final electron acceptor, combining with protons to form water as a safe byproduct of respiration."
+                },
+                {
+                    id: "resp_4",
+                    topic: "Cellular Respiration",
+                    type: "Multiple Choice",
+                    question: "In the absence of oxygen, muscle cells convert pyruvate into which compound to regenerate NAD+?",
+                    options: [
+                        "Lactic Acid",
+                        "Ethanol",
+                        "Acetyl-CoA",
+                        "Oxaloacetate"
+                    ],
+                    answer: "Lactic Acid",
+                    explanation: "Lactic acid fermentation reduces pyruvate to lactic acid, oxidation of NADH to NAD+ allows glycolysis to keep operating."
+                },
+                {
+                    id: "resp_5",
+                    topic: "Cellular Respiration",
+                    type: "Multiple Choice",
+                    question: "How many net ATP molecules are produced directly by Glycolysis of a single glucose molecule?",
+                    options: [
+                        "2 ATP",
+                        "4 ATP",
+                        "32 ATP",
+                        "36 ATP"
+                    ],
+                    answer: "2 ATP",
+                    explanation: "Glycolysis consumes 2 ATP and produces 4 ATP, resulting in a net yield of exactly 2 ATP molecules."
                 }
             ],
-            "Mitosis": [
+            "Genetics": [
                 {
-                    type: "MC",
-                    text: "What is the primary function of mitosis in multicellular organisms, such as humans?",
+                    id: "gen_1",
+                    topic: "Genetics",
+                    type: "Multiple Choice",
+                    question: "In Mendel's pea plants, purple flowers (P) are dominant to white flowers (p). If a heterozygous purple plant is crossed with a white plant, what is the expected phenotypic ratio of purple to white offspring?",
                     options: [
-                        "Growth and repairing damaged tissues",
-                        "Producing sperm and egg cells for sexual reproduction",
-                        "Translating genetic codes into protein chains",
-                        "Extracting ATP energy from food molecules"
+                        "1:1",
+                        "3:1",
+                        "1:2:1",
+                        "All purple"
                     ],
-                    correctAnswer: "Growth and repairing damaged tissues",
-                    explanation: "Mitosis produces genetically identical body cells, which allow multicellular organisms to grow, heal, and replace dead or damaged tissues."
+                    answer: "1:1",
+                    explanation: "A cross of heterozygous (Pp) with homozygous recessive (pp) yields 50% Pp (purple) and 50% pp (white), which is a 1:1 phenotypic ratio."
                 },
                 {
-                    type: "SA",
-                    text: "How many genetically identical daughter cells are produced from a single parent cell at the end of mitosis?",
-                    acceptable: ["2", "two"],
-                    explanation: "Mitosis involves one division step, yielding exactly two daughter cells."
-                },
-                {
-                    type: "MC",
-                    text: "Which of the following statements best describes the genetic makeup of the cells produced by mitosis?",
+                    id: "gen_2",
+                    topic: "Genetics",
+                    type: "Multiple Choice",
+                    question: "Which of the following is the key process during Prophase I of meiosis that increases genetic diversity?",
                     options: [
-                        "They are genetically identical to the original parent cell.",
-                        "They contain only half the genetic information of the parent cell.",
-                        "They are a random genetic mix of two different parent cells.",
-                        "They do not contain any genetic material or chromosomes."
+                        "Crossing Over",
+                        "Sister Chromatid Separation",
+                        "DNA Replication",
+                        "Cytokinesis"
                     ],
-                    correctAnswer: "They are genetically identical to the original parent cell.",
-                    explanation: "Mitosis copies and distributes chromosomes exactly so that both daughter cells are clones of the original parent cell."
+                    answer: "Crossing Over",
+                    explanation: "Crossing over allows homologous chromosomes to exchange segments of genetic material, creating unique combinations of alleles."
                 },
                 {
-                    type: "SA",
-                    text: "What thread-like structures of tightly packaged DNA, containing genes, line up and split during cellular division?",
-                    acceptable: ["chromosomes", "chromosome"],
-                    explanation: "Chromosomes are condensed, organized packages of DNA that are separated equally during cell division."
+                    id: "gen_3",
+                    topic: "Genetics",
+                    type: "Multiple Choice",
+                    question: "If a person has blood type AB, both the A and B alleles are fully expressed. This is a classic example of which inheritance pattern?",
+                    options: [
+                        "Codominance",
+                        "Incomplete Dominance",
+                        "Polygenic Inheritance",
+                        "Sex-linked Inheritance"
+                    ],
+                    answer: "Codominance",
+                    explanation: "Codominance occurs when both alleles in a heterozygote are fully and separately expressed without blending."
                 },
                 {
-                    type: "MC",
-                    text: "If a human body cell containing 46 chromosomes undergoes mitosis, how many chromosomes will be in each of the two new cells?",
-                    options: ["46", "23", "92", "12"],
-                    correctAnswer: "46",
-                    explanation: "Because mitosis creates exact duplicates, the original diploid number of chromosomes (46 in humans) is preserved in both new cells."
+                    id: "gen_4",
+                    topic: "Genetics",
+                    type: "Multiple Choice",
+                    question: "Which DNA base-pairing rule is correct according to Chargaff's rules of molecular biology?",
+                    options: [
+                        "Adenine pairs with Thymine (A-T)",
+                        "Adenine pairs with Guanine (A-G)",
+                        "Cytosine pairs with Thymine (C-T)",
+                        "Guanine pairs with Uracil (G-U)"
+                    ],
+                    answer: "Adenine pairs with Thymine (A-T)",
+                    explanation: "In DNA molecules, Adenine always pairs with Thymine (A-T), and Cytosine pairs with Guanine (C-G)."
                 },
                 {
-                    type: "SA",
-                    text: "What is the scientific term for the physical splitting of the cell's remaining cytoplasm to form two separate cells?",
-                    acceptable: ["cytokinesis"],
-                    explanation: "Cytokinesis is the final step in the cell division process where the cytoplasm is physically divided."
+                    id: "gen_5",
+                    topic: "Genetics",
+                    type: "Multiple Choice",
+                    question: "An individual's physical, observable traits are referred to as their:",
+                    options: [
+                        "Phenotype",
+                        "Genotype",
+                        "Allele Frequency",
+                        "Karyotype"
+                    ],
+                    answer: "Phenotype",
+                    explanation: "Phenotype is the expression of physical characteristics, while genotype is the underlying genetic makeup (alleles)."
                 }
             ],
-            "Meiosis": [
+            "Evolution": [
                 {
-                    type: "MC",
-                    text: "What is the primary function of meiosis in sexually reproducing organisms?",
+                    id: "evol_1",
+                    topic: "Evolution",
+                    type: "Multiple Choice",
+                    question: "Which of the following is the primary mechanism of evolution proposed by Charles Darwin in Origin of Species?",
                     options: [
-                        "To produce gametes (sperm and eggs) with half the original genetic material",
-                        "To duplicate body cells to repair a physical wound",
-                        "To transcribe single-stranded RNA molecules from DNA templates",
-                        "To help a single-celled organism grow in overall size"
+                        "Natural Selection",
+                        "Acquired Characteristics",
+                        "Genetic Engineering",
+                        "Spontaneous Generation"
                     ],
-                    correctAnswer: "To produce gametes (sperm and eggs) with half the original genetic material",
-                    explanation: "Meiosis is a specialized cell division that reduces the chromosome number by half to create reproductive gametes."
+                    answer: "Natural Selection",
+                    explanation: "Natural selection is the differential survival and reproduction of individuals due to phenotypic differences."
                 },
                 {
-                    type: "SA",
-                    text: "How many total daughter cells are produced at the completion of meiosis, starting from a single diploid parent cell?",
-                    acceptable: ["4", "four"],
-                    explanation: "Meiosis involves two sequential rounds of division (Meiosis I and II), resulting in four daughter cells."
-                },
-                {
-                    type: "MC",
-                    text: "If a human somatic (body) cell has 46 chromosomes, how many chromosomes will be in a mature egg or sperm cell produced by meiosis?",
-                    options: ["23", "46", "92", "12"],
-                    correctAnswer: "23",
-                    explanation: "Meiosis is a reduction division that halves the diploid chromosome count from 46 down to the haploid count of 23."
-                },
-                {
-                    type: "SA",
-                    text: "What term is used to describe a reproductive cell that contains only a single, unpaired set of chromosomes?",
-                    acceptable: ["haploid"],
-                    explanation: "Haploid cells, like gametes (n), contain half the number of chromosomes found in somatic body cells (which are diploid, 2n)."
-                },
-                {
-                    type: "MC",
-                    text: "Why is meiosis vital for maintaining genetic diversity within a population of a species?",
+                    id: "evol_2",
+                    topic: "Evolution",
+                    type: "Multiple Choice",
+                    question: "Anatomical structures that are similar in different species due to a shared evolutionary ancestry are known as:",
                     options: [
-                        "It shuffles and swaps genetic material, ensuring each gamete is unique.",
-                        "It prevents any genetic mutations from occurring in future offspring.",
-                        "It ensures that offspring are exact genetic clones of one of their parents.",
-                        "It speeds up the rate of cell division so organisms can reproduce faster."
+                        "Homologous Structures",
+                        "Analogous Structures",
+                        "Vestigial Structures",
+                        "Adaptive Radiation"
                     ],
-                    correctAnswer: "It shuffles and swaps genetic material, ensuring each gamete is unique.",
-                    explanation: "Meiosis shuffles genes (through crossing over and random alignment), ensuring that gametes carry unique combinations of traits, which drives evolutionary variation."
+                    answer: "Homologous Structures",
+                    explanation: "Homologous structures share basic anatomy because they originated from a common ancestor (e.g., human arm and bat wing)."
                 },
                 {
-                    type: "SA",
-                    text: "What is the general scientific term for mature sex cells, such as sperm and eggs, created during meiosis?",
-                    acceptable: ["gametes", "gamete", "sex cells", "sex cell"],
-                    explanation: "Sperm and egg cells are collectively referred to as gametes."
+                    id: "evol_3",
+                    topic: "Evolution",
+                    type: "Multiple Choice",
+                    question: "What term describes the sudden change in allele frequencies due to a catastrophic decrease in population size?",
+                    options: [
+                        "Bottleneck Effect",
+                        "Founder Effect",
+                        "Gene Flow",
+                        "Directional Selection"
+                    ],
+                    answer: "Bottleneck Effect",
+                    explanation: "The bottleneck effect is genetic drift occurring after a massive population crash, reducing overall genetic variation."
+                },
+                {
+                    id: "evol_4",
+                    topic: "Evolution",
+                    type: "Multiple Choice",
+                    question: "What kind of evolutionary selection occurs when individuals at both extreme ends of a phenotypic range have higher fitness than intermediate individuals?",
+                    options: [
+                        "Disruptive Selection",
+                        "Stabilizing Selection",
+                        "Directional Selection",
+                        "Artificial Selection"
+                    ],
+                    answer: "Disruptive Selection",
+                    explanation: "Disruptive selection favors both extremes of phenotypic traits over moderate traits, potentially driving speciation."
+                },
+                {
+                    id: "evol_5",
+                    topic: "Evolution",
+                    type: "Multiple Choice",
+                    question: "Which is the correct definition of biological fitness in evolutionary terms?",
+                    options: [
+                        "An organism's ability to survive and produce viable, fertile offspring",
+                        "The muscular strength and running speed of an animal",
+                        "The overall lifespan of an organism",
+                        "How dominant an organism is in social structures"
+                    ],
+                    answer: "An organism's ability to survive and produce viable, fertile offspring",
+                    explanation: "Evolutionary fitness is strictly measured by reproductive success: how many copies of genes are passed to the next generation."
                 }
             ],
-            "DNA Structure": [
+            "Ecology": [
                 {
-                    type: "MC",
-                    text: "What is the general twisted-ladder structural shape of a double-stranded DNA molecule?",
-                    options: ["Double helix", "Single straight strand", "Circular loop", "Crossed bundle"],
-                    correctAnswer: "Double helix",
-                    explanation: "DNA features two complementary strands wrapped around a central axis, forming a double helix."
-                },
-                {
-                    type: "SA",
-                    text: "According to DNA complementary base-pairing rules, what base will always pair with Adenine (A) on the opposite strand?",
-                    acceptable: ["thymine", "t"],
-                    explanation: "Adenine always pairs specifically with Thymine in DNA molecules via hydrogen bonds."
-                },
-                {
-                    type: "MC",
-                    text: "DNA is a polymer made up of simpler repeating chemical units. What are these individual structural subunits called?",
-                    options: ["Nucleotides", "Amino acids", "Lipids", "Sugars"],
-                    correctAnswer: "Nucleotides",
-                    explanation: "DNA and RNA are composed of nucleotide monomers, which consist of a phosphate, a sugar, and a nitrogenous base."
-                },
-                {
-                    type: "SA",
-                    text: "What complementary base always pairs with Guanine (G) on the opposite strand of a DNA helix?",
-                    acceptable: ["cytosine", "c"],
-                    explanation: "Guanine always complementary base-pairs with Cytosine."
-                },
-                {
-                    type: "MC",
-                    text: "Which of the following make up the solid, repeating 'backbone' on the outer sides of a DNA double helix?",
+                    id: "eco_1",
+                    topic: "Ecology",
+                    type: "Multiple Choice",
+                    question: "Approximately what percentage of energy is transferred from one trophic level to the next higher level in an ecological energy pyramid?",
                     options: [
-                        "Alternating sugars and phosphate groups",
-                        "Weak hydrogen bonds",
-                        "Nitrogenous base pairs",
-                        "Amino acid peptide chains"
+                        "10%",
+                        "50%",
+                        "90%",
+                        "100%"
                     ],
-                    correctAnswer: "Alternating sugars and phosphate groups",
-                    explanation: "The outer sides of the DNA double helix are composed of alternating deoxyribose sugar and phosphate molecules."
+                    answer: "10%",
+                    explanation: "Only about 10% of energy is transferred up each trophic level; the remaining 95% is lost as metabolic heat and waste."
                 },
                 {
-                    type: "SA",
-                    text: "What type of weak chemical bonds hold the base pairs together in the center of the DNA molecule, allowing it to unzip easily?",
-                    acceptable: ["hydrogen bonds", "hydrogen bond", "hydrogen"],
-                    explanation: "Complementary bases in the middle of the double helix are held together by weak hydrogen bonds."
+                    id: "eco_2",
+                    topic: "Ecology",
+                    type: "Multiple Choice",
+                    question: "Which type of ecological relationship benefits one organism while leaving the other completely unaffected?",
+                    options: [
+                        "Commensalism",
+                        "Mutualism",
+                        "Parasitism",
+                        "Competition"
+                    ],
+                    answer: "Commensalism",
+                    explanation: "Commensalism is a (+/0) relationship where one species benefits and the other is neither helped nor harmed."
+                },
+                {
+                    id: "eco_3",
+                    topic: "Ecology",
+                    type: "Multiple Choice",
+                    question: "What species play a vital, disproportionately large role in maintaining the structural balance of their ecosystem?",
+                    options: [
+                        "Keystone Species",
+                        "Invasive Species",
+                        "Primary Producers",
+                        "Indicator Species"
+                    ],
+                    answer: "Keystone Species",
+                    explanation: "Keystone species have strong, cascading effects on their community structures. Removing them can collapse the ecosystem."
+                },
+                {
+                    id: "eco_4",
+                    topic: "Ecology",
+                    type: "Multiple Choice",
+                    question: "What ecological concept describes the maximum population size that an environment can sustain indefinitely given the available resources?",
+                    options: [
+                        "Carrying Capacity ($K$)",
+                        "Exponential Growth Rate ($r$)",
+                        "Ecological Footprint",
+                        "Biomass Density"
+                    ],
+                    answer: "Carrying Capacity ($K$)",
+                    explanation: "The carrying capacity is the limit of population growth imposed by limiting factors like food, space, and water."
+                },
+                {
+                    id: "eco_5",
+                    topic: "Ecology",
+                    type: "Multiple Choice",
+                    question: "What process occurs when nutrient-rich runoff causes algal blooms, oxygen depletion, and subsequent fish death in a body of water?",
+                    options: [
+                        "Eutrophication",
+                        "Bioaccumulation",
+                        "Succession",
+                        "Niche Partitioning"
+                    ],
+                    answer: "Eutrophication",
+                    explanation: "Eutrophication is over-enrichment of water bodies with nutrients (nitrogen/phosphorus), leading to excessive algal growth and oxygen dead zones."
                 }
             ],
-            "DNA Replication": [
+            "Cell Biology": [
                 {
-                    type: "MC",
-                    text: "Why must a cell replicate its entire genome of DNA before it undergoes cell division?",
+                    id: "cell_1",
+                    topic: "Cell Biology",
+                    type: "Multiple Choice",
+                    question: "Which of the following organelles is responsible for synthesizing ribosomal RNA (rRNA) and assembling ribonuclear subunits?",
                     options: [
-                        "To ensure each new daughter cell receives an exact, complete set of genetic instructions.",
-                        "To convert the DNA directly into carbon dioxide and water molecules.",
-                        "To swap genetic segments and increase variation within body cells.",
-                        "To destroy old genes that might contain mistakes."
+                        "Nucleolus",
+                        "Golgi Apparatus",
+                        "Smooth Endoplasmic Reticulum",
+                        "Centrosome"
                     ],
-                    correctAnswer: "To ensure each new daughter cell receives an exact, complete set of genetic instructions.",
-                    explanation: "Replication duplicates the DNA code so that when cell division occurs, each daughter cell receives a full set of genes."
+                    answer: "Nucleolus",
+                    explanation: "The nucleolus is the dense sub-nuclear structure where ribosomes are synthesized and pre-assembled."
                 },
                 {
-                    type: "SA",
-                    text: "DNA replication is described as 'semi-conservative.' This means each copied double helix consists of one original strand and one ____________ strand.",
-                    acceptable: ["new", "newly synthesized", "fresh"],
-                    explanation: "The semi-conservative nature of replication means that half of the original molecule is conserved as a template, and the other half is newly built."
-                },
-                {
-                    type: "MC",
-                    text: "What is the final, high-level biological outcome of the DNA replication process?",
+                    id: "cell_2",
+                    topic: "Cell Biology",
+                    type: "Multiple Choice",
+                    question: "The fluid-mosaic model states that cell membranes are primarily made of a bilayer of:",
                     options: [
-                        "Two identical double-stranded DNA helices are formed from one original molecule.",
-                        "A single-stranded messenger RNA molecule is successfully constructed.",
-                        "Amino acids are assembled into a functional, folded protein.",
-                        "The chromosome count of the cell is cut exactly in half."
+                        "Phospholipids",
+                        "Amino Acids",
+                        "Nucleic Acids",
+                        "Triglycerides"
                     ],
-                    correctAnswer: "Two identical double-stranded DNA helices are formed from one original molecule.",
-                    explanation: "Replication copies the genetic blueprint, resulting in two identical double helices, each containing one old and one new strand."
+                    answer: "Phospholipids",
+                    explanation: "The plasma membrane is a phospholipid bilayer with hydrophobic tail cores and hydrophilic phosphate heads."
                 },
                 {
-                    type: "SA",
-                    text: "What is the standard abbreviation of the double-stranded genetic material that acts as the blueprint being copied during replication?",
-                    acceptable: ["dna"],
-                    explanation: "Deoxyribonucleic acid is abbreviated as DNA."
-                },
-                {
-                    type: "MC",
-                    text: "How does the strict complementary base-pairing (A with T, C with G) assist in replication accuracy?",
+                    id: "cell_3",
+                    topic: "Cell Biology",
+                    type: "Multiple Choice",
+                    question: "Which cellular transport process moves solute particles against their concentration gradient, requiring metabolic energy (ATP)?",
                     options: [
-                        "It allows each original parent strand to serve as a precise template for building a new matching partner strand.",
-                        "It wraps the DNA tightly around structural proteins to protect it from thermal damage.",
-                        "It converts the DNA double helix directly into high-energy starch molecules.",
-                        "It tells the cell to stop dividing when nutrients run low."
+                        "Active Transport",
+                        "Facilitated Diffusion",
+                        "Simple Diffusion",
+                        "Osmosis"
                     ],
-                    correctAnswer: "It allows each original parent strand to serve as a precise template for building a new matching partner strand.",
-                    explanation: "Because bases only pair one way, each separated single strand acts as an unambiguous blueprint to synthesize its new matching partner."
+                    answer: "Active Transport",
+                    explanation: "Active transport uses transport proteins and cellular energy (ATP) to pump materials uphill against concentration gradients."
                 },
                 {
-                    type: "SA",
-                    text: "During which broad phase of the overall cell cycle, before the cell enters physical division (mitosis), does DNA replication take place?",
-                    acceptable: ["interphase", "s phase", "s-phase", "synthesis phase"],
-                    explanation: "DNA replication occurs during the Synthesis (S) phase of Interphase, when the cell prepares for subsequent division."
+                    id: "cell_4",
+                    topic: "Cell Biology",
+                    type: "Multiple Choice",
+                    question: "Which organelle contains hydrolytic enzymes used for recycling worn-out cellular parts and cellular waste digestion?",
+                    options: [
+                        "Lysosome",
+                        "Peroxisome",
+                        "Vacuole",
+                        "Ribosome"
+                    ],
+                    answer: "Lysosome",
+                    explanation: "Lysosomes are acidic vacuoles containing digestive enzymes that break down waste materials, bacteria, and old organelles."
+                },
+                {
+                    id: "cell_5",
+                    topic: "Cell Biology",
+                    type: "Multiple Choice",
+                    question: "What protein structure forms the spindle fibers that pull sister chromatids apart during eukaryotic mitosis?",
+                    options: [
+                        "Microtubules (Tubulin)",
+                        "Microfilaments (Actin)",
+                        "Intermediate Filaments (Keratin)",
+                        "Collagen fibers"
+                    ],
+                    answer: "Microtubules (Tubulin)",
+                    explanation: "Microtubules made of tubulin subunits assemble to form mitotic spindle fibers that attach to kinetochores."
                 }
             ]
         };
 
-        // --- GLOBAL STATE ---
-        let currentStudentName = "";
-        let currentClassPeriod = "";
-        let selectedQuestions = []; // Exactly 18 questions (3 per category)
-        let currentQuestionIdx = 0;
-        let quizAnswersLog = []; // [{ question, userAnswer, isCorrect, correctText }]
-        let quizStartTime = 0; // Epoch start timestamp
-        let activeAttemptId = ""; // Current quiz attempt ID
-        let attemptsDatabase = []; // Local attempts collection
+        // ================= STATE MANAGEMENT VARIABLES =================
+        let studentName = "";
+        let classPeriod = "";
+        let selectedQuestions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = []; // stores { questionId, selectedAnswer, correctAnswer, isCorrect, topic, question }
+        let timerInterval = null;
+        let elapsedSeconds = 0;
+        let isSubmitted = false;
 
-        // --- DATABASE SECTOR (LOCAL STORAGE EXCLUSIVE) ---
-        function loadDatabaseFromLocal() {
-            try {
-                const stored = localStorage.getItem('biology_quiz_local_attempts');
-                if (stored) {
-                    attemptsDatabase = JSON.parse(stored);
-                } else {
-                    // Pre-populate with a classic mock attempt to make the table look professional initially
-                    attemptsDatabase = [
-                        {
-                            id: "att-mock-1",
-                            studentName: "Sarah Jenkins",
-                            classPeriod: "Period 1",
-                            timestamp: new Date().toLocaleDateString() + ", 8:14 AM",
-                            rawTimestamp: Date.now() - 3600000,
-                            score: 16,
-                            total: 18,
-                            percentage: 89,
-                            timeSpent: "4m 12s",
-                            weakestTopic: "DNA Replication",
-                            status: "Completed",
-                            currentProgress: 18,
-                            answers: [
-                                { topic: "Photosynthesis", question: "What is the primary organelle where plants transform radiant solar energy into stable chemical energy?", correct: true, studentAns: "Chloroplast", correctAns: "Chloroplast" },
-                                { topic: "Photosynthesis", question: "What carbon-rich gas must plants absorb from the atmosphere as a main starting reactant to construct sugar molecules?", correct: true, studentAns: "carbon dioxide", correctAns: "carbon dioxide / co2" },
-                                { topic: "Photosynthesis", question: "Which of the following describes the basic transfer of energy during photosynthesis?", correct: true, studentAns: "Light energy is captured and stored as chemical energy within sugar molecules.", correctAns: "Light energy is captured and stored as chemical energy within sugar molecules." },
-                                { topic: "Cellular Respiration", question: "What is the primary organelle responsible for breaking down sugar molecules to release highly usable chemical energy (ATP)?", correct: true, studentAns: "Mitochondria", correctAns: "Mitochondria" },
-                                { topic: "Cellular Respiration", question: "What is the three-letter abbreviation of the primary energy currency molecule generated during cellular respiration?", correct: true, studentAns: "atp", correctAns: "atp" },
-                                { topic: "Cellular Respiration", question: "What is the ultimate biological goal of cellular respiration in living organisms?", correct: true, studentAns: "To break down food to yield usable chemical energy for the cell.", correctAns: "To break down food to yield usable chemical energy for the cell." },
-                                { topic: "Mitosis", question: "What is the primary function of mitosis in multicellular organisms, such as humans?", correct: true, studentAns: "Growth and repairing damaged tissues", correctAns: "Growth and repairing damaged tissues" },
-                                { topic: "Mitosis", question: "How many genetically identical daughter cells are produced from a single parent cell at the end of mitosis?", correct: true, studentAns: "2", correctAns: "2 / two" },
-                                { topic: "Mitosis", question: "Which of the following statements best describes the genetic makeup of the cells produced by mitosis?", correct: true, studentAns: "They are genetically identical to the original parent cell.", correctAns: "They are genetically identical to the original parent cell." },
-                                { topic: "Meiosis", question: "What is the primary function of meiosis in sexually reproducing organisms?", correct: true, studentAns: "To produce gametes (sperm and eggs) with half the original genetic material", correctAns: "To produce gametes (sperm and eggs) with half the original genetic material" },
-                                { topic: "Meiosis", question: "How many total daughter cells are produced at the completion of meiosis, starting from a single diploid parent cell?", correct: true, studentAns: "4", correctAns: "4 / four" },
-                                { topic: "Meiosis", question: "If a human somatic (body) cell has 46 chromosomes, how many chromosomes will be in a mature egg or sperm cell produced by meiosis?", correct: true, studentAns: "23", correctAns: "23" },
-                                { topic: "DNA Structure", question: "What is the general twisted-ladder structural shape of a double-stranded DNA molecule?", correct: true, studentAns: "Double helix", correctAns: "Double helix" },
-                                { topic: "DNA Structure", question: "According to DNA complementary base-pairing rules, what base will always pair with Adenine (A) on the opposite strand?", correct: true, studentAns: "Thymine", correctAns: "thymine / t" },
-                                { topic: "DNA Structure", question: "DNA is a polymer made up of simpler repeating chemical units. What are these individual structural subunits called?", correct: true, studentAns: "Nucleotides", correctAns: "Nucleotides" },
-                                { topic: "DNA Replication", question: "Why must a cell replicate its entire genome of DNA before it undergoes cell division?", correct: false, studentAns: "To make glucose for energy", correctAns: "To ensure each new daughter cell receives an exact, complete set of genetic instructions." },
-                                { topic: "DNA Replication", question: "DNA replication is described as 'semi-conservative.' This means each copied double helix consists of one original strand and one ____________ strand.", correct: true, studentAns: "new", correctAns: "new / newly synthesized / fresh" },
-                                { topic: "DNA Replication", question: "What is the final, high-level biological outcome of the DNA replication process?", correct: false, studentAns: "Amino acids are assembled into a functional, folded protein.", correctAns: "Two identical double-stranded DNA helices are formed from one original molecule." }
-                            ],
-                            breakdown: { "Photosynthesis": 3, "Cellular Respiration": 3, "Mitosis": 3, "Meiosis": 3, "DNA Structure": 3, "DNA Replication": 1 }
-                        }
-                    ];
-                    saveDatabaseToLocal();
-                }
-            } catch(e) {
-                console.error("Failed to parse LocalStorage records", e);
-            }
-            updateWebhookBadgeUI();
-            renderTeacherAnalytics();
-        }
+        // Session recovery hold reference
+        let activeAttemptToResume = null;
 
-        function saveDatabaseToLocal() {
-            try {
-                localStorage.setItem('biology_quiz_local_attempts', JSON.stringify(attemptsDatabase));
-            } catch(e) {
-                console.warn("Failed to write offline local attempts", e);
-            }
-        }
+        // Custom Webhook Settings
+        let webhookUrl = localStorage.getItem("bio_webhook_url") || "";
+        // Pre-populated Teacher Database for UI feedback
+        let studentAttempts = [];
 
-        // --- WEBHOOK ENGINE: DISPATCH TO GOOGLE SHEETS ---
-        async function dispatchWebhookPayload(attempt) {
-            const webhookUrl = localStorage.getItem('biology_quiz_webhook_url') || HARDCODED_WEBHOOK_URL;
-            if (!webhookUrl) return;
+        // Simple default credential
+        const DEFAULT_TEACHER_PASS = "bioadmin";
 
-            try {
-                // Utilizing text/plain with no-cors to reliably route past CORS preflight constraints in standalone pages
-                await fetch(webhookUrl, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'text/plain'
-                    },
-                    body: JSON.stringify(attempt)
-                });
-            } catch (err) {
-                console.warn("Real-time Webhook sync dispatch failed:", err);
-            }
-        }
+        // ================= APP INITIALIZATION =================
+        window.addEventListener("DOMContentLoaded", () => {
+            loadAttemptsFromStorage();
+            updateTeacherStatsUI();
+            checkWebhookURLDiagnostics();
+        });
 
-        // --- WEBHOOK STATUS BADGE RE-RENDER ---
-        function updateWebhookBadgeUI() {
-            const hBadge = document.getElementById('header-sync-badge');
-            const tableBadge = document.getElementById('live-feed-badge');
-            const configDiagnostics = document.getElementById('webhook-diagnostics');
-            
-            const url = localStorage.getItem('biology_quiz_webhook_url') || HARDCODED_WEBHOOK_URL;
+        // ================= ROUTING & SCREEN CONTROLS =================
+        function showScreen(screenId) {
+            document.getElementById("screen-welcome").classList.add("hidden");
+            document.getElementById("screen-quiz").classList.add("hidden");
+            document.getElementById("screen-results").classList.add("hidden");
+            document.getElementById("screen-teacher").classList.add("hidden");
 
-            if (url) {
-                const urlObj = new URL(url);
-                const shortDomain = urlObj.hostname;
-                hBadge.innerText = `Sheets Sync: On`;
-                hBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-800";
-                
-                tableBadge.innerHTML = `
-                    <span class="relative flex h-1.5 w-1.5 mr-1.5">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-                    </span>
-                    Real-time Webhook Streaming Connected
-                `;
-                tableBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 flex items-center";
-                
-                if (configDiagnostics) {
-                    configDiagnostics.innerText = `Connected: Dispatching logs to ${shortDomain}`;
-                    configDiagnostics.className = "font-bold text-emerald-600";
-                }
+            document.getElementById(screenId).classList.remove("hidden");
+
+            // Handle back button visibility in Header
+            const backBtn = document.getElementById("btn-back-home");
+            if (screenId === "screen-teacher") {
+                backBtn.classList.remove("hidden");
+                backBtn.innerText = "Back to Practice";
             } else {
-                hBadge.innerText = "Local Mode";
-                hBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500";
+                backBtn.classList.add("hidden");
+            }
+        }
+
+        function resetToWelcome() {
+            stopTimer();
+            showScreen("screen-welcome");
+        }
+
+        // ================= QUIZ CORE LOGIC =================
+        function startQuiz(event) {
+            event.preventDefault();
+
+            studentName = document.getElementById("student-name").value.trim();
+            classPeriod = document.getElementById("class-period").value;
+
+            if (!studentName || !classPeriod) {
+                alert("Please provide both a name and period to begin.");
+                return;
+            }
+
+            // Check if there is an unfinished attempt for this name and period
+            const existingActive = studentAttempts.find(
+                att => att.studentName.toLowerCase() === studentName.toLowerCase() &&
+                       att.classPeriod === classPeriod &&
+                       (att.progressState === "STARTED" || att.progressState === "IN_PROGRESS")
+            );
+
+            if (existingActive) {
+                // Show prompt modal instead of immediately starting a new quiz
+                activeAttemptToResume = existingActive;
+                document.getElementById("resume-student-highlight").innerText = existingActive.studentName;
+                document.getElementById("resume-period-highlight").innerText = existingActive.classPeriod;
+                document.getElementById("resume-timestamp").innerText = existingActive.timestamp;
+                document.getElementById("resume-progress").innerText = `Question ${existingActive.currentQuestionIndex + 1} of ${existingActive.selectedQuestions ? existingActive.selectedQuestions.length : 18}`;
+                document.getElementById("resume-timer").innerText = existingActive.duration || "00:00";
                 
-                tableBadge.innerHTML = `
-                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400 mr-1.5"></span>
-                    Local Session Active (No Webhook)
+                document.getElementById("modal-resume").classList.remove("hidden");
+                return;
+            }
+
+            // No active session found - proceed normally
+            startFreshQuiz();
+        }
+
+        function startFreshQuiz() {
+            // Generate customized quiz (exactly 3 randomized questions per topic)
+            selectedQuestions = [];
+            for (const topic in BIOLOGY_QUESTION_BANK) {
+                const list = BIOLOGY_QUESTION_BANK[topic];
+                // Shuffle copy of array
+                const shuffled = [...list].sort(() => 0.5 - Math.random());
+                // Grab first 3
+                selectedQuestions.push(...shuffled.slice(0, 3));
+            }
+
+            // Double Shuffle the combined 18 questions to interleave topics
+            selectedQuestions.sort(() => 0.5 - Math.random());
+
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            elapsedSeconds = 0;
+            isSubmitted = false;
+
+            // Start screen transition
+            showScreen("screen-quiz");
+            loadQuestion(currentQuestionIndex);
+            startTimer(false);
+
+            // Dispatch baseline progress updates
+            syncProgressLive("STARTED");
+        }
+
+        // Action when user clicks "Resume Session"
+        function confirmResumeSession() {
+            if (!activeAttemptToResume) return;
+
+            document.getElementById("modal-resume").classList.add("hidden");
+
+            studentName = activeAttemptToResume.studentName;
+            classPeriod = activeAttemptToResume.classPeriod;
+            selectedQuestions = activeAttemptToResume.selectedQuestions || [];
+            currentQuestionIndex = activeAttemptToResume.currentQuestionIndex || 0;
+            userAnswers = activeAttemptToResume.detailedAnswers || [];
+            elapsedSeconds = activeAttemptToResume.elapsedSeconds || 0;
+            isSubmitted = false;
+
+            showScreen("screen-quiz");
+            loadQuestion(currentQuestionIndex);
+            startTimer(true); // Resume timer from saved elapsedSeconds
+
+            // If they already answered the current question but didn't press "Next", restore that state
+            if (userAnswers[currentQuestionIndex]) {
+                restoreAnswerState(userAnswers[currentQuestionIndex]);
+            }
+
+            activeAttemptToResume = null;
+        }
+
+        // Action when user discards previous session
+        function discardAndStartFresh() {
+            document.getElementById("modal-resume").classList.add("hidden");
+            
+            // Remove/overwrite the previous active attempt
+            if (activeAttemptToResume) {
+                studentAttempts = studentAttempts.filter(att => att.id !== activeAttemptToResume.id);
+                saveAttemptsToStorage();
+                updateTeacherStatsUI();
+            }
+
+            activeAttemptToResume = null;
+            startFreshQuiz();
+        }
+
+        function loadQuestion(index) {
+            const q = selectedQuestions[index];
+            isSubmitted = false;
+
+            // Reset control buttons
+            document.getElementById("btn-submit-answer").classList.remove("hidden");
+            document.getElementById("btn-next-question").classList.add("hidden");
+
+            // Set badge information
+            document.getElementById("topic-badge").innerText = `Topic: ${q.topic}`;
+            document.getElementById("question-type-badge").innerText = q.type;
+            document.getElementById("progress-text").innerText = `Question ${index + 1} of ${selectedQuestions.length}`;
+
+            // Set progress bar fill width
+            const progressPercent = ((index) / selectedQuestions.length) * 100;
+            document.getElementById("progress-bar-fill").style.width = `${progressPercent || 5.5}%`;
+
+            // Load statement with LaTeX-style formats replaced into readable strings
+            document.getElementById("question-text").innerHTML = formatLaTexMarkers(q.question);
+
+            // Generate multiple-choice radios
+            const container = document.getElementById("answer-inputs-container");
+            container.innerHTML = "";
+
+            q.options.forEach((opt, idx) => {
+                const optId = `opt_${idx}`;
+                const optionCard = document.createElement("label");
+                optionCard.setAttribute("for", optId);
+                optionCard.className = "flex items-center space-x-3 p-4 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all select-none group";
+
+                optionCard.innerHTML = `
+                    <input type="radio" name="biology-answer" id="${optId}" value="${escapeHtml(opt)}" class="w-4 h-4 text-teal-600 focus:ring-teal-500 border-slate-300 cursor-pointer">
+                    <span class="text-slate-800 text-sm font-medium group-hover:text-slate-950">${formatLaTexMarkers(opt)}</span>
                 `;
-                tableBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 flex items-center";
-                
-                if (configDiagnostics) {
-                    configDiagnostics.innerText = "Currently Offline (Local Storage Mode only)";
-                    configDiagnostics.className = "font-bold text-slate-600";
+                container.appendChild(optionCard);
+            });
+
+            // Hide feedback panel
+            document.getElementById("feedback-panel").classList.add("hidden");
+        }
+
+        function restoreAnswerState(savedAnswer) {
+            isSubmitted = true;
+            
+            // Highlight chosen radio button
+            const radios = document.querySelectorAll('input[name="biology-answer"]');
+            radios.forEach(r => {
+                r.disabled = true;
+                if (r.value === savedAnswer.selectedAnswer) {
+                    r.checked = true;
+                }
+            });
+
+            // Re-render feedback boxes
+            const panel = document.getElementById("feedback-panel");
+            const iconDiv = document.getElementById("feedback-icon");
+            const title = document.getElementById("feedback-title");
+            const explanation = document.getElementById("feedback-explanation");
+
+            panel.classList.remove("hidden");
+            const q = selectedQuestions[currentQuestionIndex];
+
+            if (savedAnswer.isCorrect) {
+                panel.className = "mt-6 p-4 rounded-xl border border-green-200 bg-green-50 flex items-start space-x-3 transition-all";
+                iconDiv.innerHTML = `
+                    <div class="p-1 bg-green-500 rounded-full text-white">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                    </div>`;
+                title.innerText = "Correct Response!";
+                title.className = "font-bold text-sm text-green-800";
+            } else {
+                panel.className = "mt-6 p-4 rounded-xl border border-red-200 bg-red-50 flex items-start space-x-3 transition-all";
+                iconDiv.innerHTML = `
+                    <div class="p-1 bg-red-500 rounded-full text-white">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </div>`;
+                title.innerText = `Incorrect. Correct answer: ${q.answer}`;
+                title.className = "font-bold text-sm text-red-800";
+            }
+
+            explanation.innerHTML = formatLaTexMarkers(q.explanation);
+
+            document.getElementById("btn-submit-answer").classList.add("hidden");
+            document.getElementById("btn-next-question").classList.remove("hidden");
+        }
+
+        function submitAnswer() {
+            if (isSubmitted) return;
+
+            const selectedOption = document.querySelector('input[name="biology-answer"]:checked');
+            if (!selectedOption) {
+                alert("Please select an answer choice to submit.");
+                return;
+            }
+
+            isSubmitted = true;
+            const chosenVal = selectedOption.value;
+            const q = selectedQuestions[currentQuestionIndex];
+            const isCorrect = (chosenVal === q.answer);
+
+            // Log answer response
+            userAnswers[currentQuestionIndex] = {
+                questionId: q.id,
+                topic: q.topic,
+                question: q.question,
+                selectedAnswer: chosenVal,
+                correctAnswer: q.answer,
+                isCorrect: isCorrect
+            };
+
+            // Display live grading panel
+            const panel = document.getElementById("feedback-panel");
+            const iconDiv = document.getElementById("feedback-icon");
+            const title = document.getElementById("feedback-title");
+            const explanation = document.getElementById("feedback-explanation");
+
+            panel.classList.remove("hidden");
+
+            if (isCorrect) {
+                panel.className = "mt-6 p-4 rounded-xl border border-green-200 bg-green-50 flex items-start space-x-3 transition-all";
+                iconDiv.innerHTML = `
+                    <div class="p-1 bg-green-500 rounded-full text-white">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                    </div>`;
+                title.innerText = "Correct Response!";
+                title.className = "font-bold text-sm text-green-800";
+            } else {
+                panel.className = "mt-6 p-4 rounded-xl border border-red-200 bg-red-50 flex items-start space-x-3 transition-all";
+                iconDiv.innerHTML = `
+                    <div class="p-1 bg-red-500 rounded-full text-white">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </div>`;
+                title.innerText = `Incorrect. Correct answer: ${q.answer}`;
+                title.className = "font-bold text-sm text-red-800";
+            }
+
+            explanation.innerHTML = formatLaTexMarkers(q.explanation);
+
+            // Freeze the choices
+            const radios = document.querySelectorAll('input[name="biology-answer"]');
+            radios.forEach(r => r.disabled = true);
+
+            // Toggle UI buttons
+            document.getElementById("btn-submit-answer").classList.add("hidden");
+            document.getElementById("btn-next-question").classList.remove("hidden");
+
+            // Sync answer instantly with teacher portal
+            syncProgressLive("IN_PROGRESS");
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < selectedQuestions.length) {
+                // Save progress state immediately before switching
+                syncProgressLive("IN_PROGRESS");
+                loadQuestion(currentQuestionIndex);
+            } else {
+                completeQuiz();
+            }
+        }
+
+        function completeQuiz() {
+            stopTimer();
+            isSubmitted = true;
+
+            // Calculate metrics
+            let correctCount = 0;
+            let topicCorrect = {};
+            let topicTotal = {};
+
+            // Initialize breakdowns
+            for (const topic in BIOLOGY_QUESTION_BANK) {
+                topicCorrect[topic] = 0;
+                topicTotal[topic] = 0;
+            }
+
+            userAnswers.forEach(ans => {
+                topicTotal[ans.topic] = (topicTotal[ans.topic] || 0) + 1;
+                if (ans.isCorrect) {
+                    correctCount++;
+                    topicCorrect[ans.topic] = (topicCorrect[ans.topic] || 0) + 1;
+                }
+            });
+
+            const percentScore = Math.round((correctCount / selectedQuestions.length) * 100);
+
+            // Save Attempt Record
+            const attempt = {
+                id: "att_" + Date.now(),
+                studentName: studentName,
+                classPeriod: classPeriod,
+                timestamp: new Date().toLocaleString(),
+                score: `${correctCount} / ${selectedQuestions.length}`,
+                percentage: percentScore,
+                duration: formatSeconds(elapsedSeconds),
+                topicStats: {
+                    correct: topicCorrect,
+                    total: topicTotal
+                },
+                detailedAnswers: userAnswers,
+                selectedQuestions: selectedQuestions,
+                currentQuestionIndex: currentQuestionIndex,
+                elapsedSeconds: elapsedSeconds,
+                progressState: "COMPLETED"
+            };
+
+            // Calculate weakest subject unit
+            let weakestTopic = "None";
+            let minPercent = 101;
+            for (const t in topicTotal) {
+                if (topicTotal[t] > 0) {
+                    const topicPct = (topicCorrect[t] / topicTotal[t]) * 100;
+                    if (topicPct < minPercent) {
+                        minPercent = topicPct;
+                        weakestTopic = t;
+                    }
                 }
             }
-        }
+            attempt.weakestTopic = minPercent === 100 ? "None" : weakestTopic;
 
-        // --- SHUFFLER UTILITY ---
-        function shuffleArray(array) {
-            let shuffled = [...array];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            // Update local storage database (overwriting active with COMPLETED status)
+            const activeIdx = studentAttempts.findIndex(
+                att => att.studentName.toLowerCase() === studentName.toLowerCase() &&
+                       att.classPeriod === classPeriod &&
+                       att.progressState !== "COMPLETED"
+            );
+
+            if (activeIdx !== -1) {
+                studentAttempts[activeIdx] = attempt;
+            } else {
+                studentAttempts.unshift(attempt);
             }
-            return shuffled;
-        }
 
-        // --- TIME FORMATTING UTILITY ---
-        function formatDuration(ms) {
-            const totalSeconds = Math.floor(ms / 1000);
-            const minutes = Math.floor(totalSeconds / 60);
-            const seconds = totalSeconds % 60;
-            if (minutes > 0) {
-                return `${minutes}m ${seconds}s`;
+            saveAttemptsToStorage();
+            updateTeacherStatsUI();
+
+            // Populate Score results screen text
+            document.getElementById("results-score").innerText = attempt.score;
+            document.getElementById("results-percentage").innerText = `${percentScore}%`;
+
+            // Score-specific greetings
+            const greetEl = document.getElementById("results-greeting");
+            const feedbackTextEl = document.getElementById("results-feedback-text");
+
+            if (percentScore >= 90) {
+                greetEl.innerText = "Excellent Mastery!";
+                feedbackTextEl.innerText = "Outstanding! You demonstrate superior proficiency in all core high school biology standards.";
+            } else if (percentScore >= 75) {
+                greetEl.innerText = "Great Job!";
+                feedbackTextEl.innerText = "Strong work! You've shown solid capability in biological reasoning. Review your missed topics for maximum score potential.";
+            } else if (percentScore >= 60) {
+                greetEl.innerText = "Passing Score!";
+                feedbackTextEl.innerText = "You met the target baseline. Review cellular respiration, photosynthesis and ecology concepts to gain a stronger footing.";
+            } else {
+                greetEl.innerText = "Keep Practicing!";
+                feedbackTextEl.innerText = "This assessment targets credit recovery. Use the topic review below to target focus areas before taking again.";
             }
-            return `${seconds}s`;
-        }
 
-        // --- NAVIGATOR SWITCHES ---
-        function resetToWelcome() {
-            document.getElementById('screen-welcome').classList.remove('hidden');
-            document.getElementById('screen-quiz').classList.add('hidden');
-            document.getElementById('screen-results').classList.add('hidden');
-            document.getElementById('screen-teacher').classList.add('hidden');
-            document.getElementById('btn-back-home').classList.add('hidden');
-            document.getElementById('btn-nav-teacher').classList.remove('hidden');
-            document.getElementById('student-name').value = currentStudentName;
-            document.getElementById('class-period').value = currentClassPeriod;
-        }
+            // Populate Breakdown Screen Grid
+            const breakdownGrid = document.getElementById("results-breakdown-grid");
+            breakdownGrid.innerHTML = "";
 
-        // --- START QUIZ SESSION ---
-        function startQuiz(e) {
-            e.preventDefault();
-            const nameInput = document.getElementById('student-name').value.trim();
-            const periodSelect = document.getElementById('class-period').value;
-            if (!nameInput || !periodSelect) return;
-
-            currentStudentName = nameInput;
-            currentClassPeriod = periodSelect;
-            selectedQuestions = [];
-            currentQuestionIdx = 0;
-            quizAnswersLog = [];
-            quizStartTime = Date.now();
-            activeAttemptId = `att-${Date.now()}`;
-
-            // Extract questions
-            for (const topic in QUESTION_BANK) {
-                const allTopicQs = QUESTION_BANK[topic];
-                const subset = shuffleArray(allTopicQs).slice(0, 3).map(q => ({ ...q, topic }));
-                selectedQuestions.push(...subset);
+            for (const topic in topicTotal) {
+                if (topicTotal[topic] > 0) {
+                    const corr = topicCorrect[topic];
+                    const tot = topicTotal[topic];
+                    const pct = Math.round((corr / tot) * 100);
+                    
+                    const block = document.createElement("div");
+                    block.className = "p-3 rounded-lg border border-slate-100 bg-slate-50 flex justify-between items-center";
+                    block.innerHTML = `
+                        <div>
+                            <span class="font-bold text-slate-800 text-sm block">${topic}</span>
+                            <span class="text-xs text-slate-400">Score: ${corr}/${tot} correct</span>
+                        </div>
+                        <span class="px-2.5 py-1 rounded text-xs font-bold ${pct >= 75 ? 'bg-green-100 text-green-800' : pct >= 50 ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800'}">
+                            ${pct}%
+                        </span>
+                    `;
+                    breakdownGrid.appendChild(block);
+                }
             }
-            selectedQuestions = shuffleArray(selectedQuestions);
 
-            // Record initial "In Progress" log locally and push webhook
-            syncQuizProgress("In Progress");
+            showScreen("screen-results");
 
-            // UI Transformation
-            document.getElementById('screen-welcome').classList.add('hidden');
-            document.getElementById('screen-teacher').classList.add('hidden');
-            document.getElementById('screen-results').classList.add('hidden');
-            document.getElementById('btn-nav-teacher').classList.add('hidden');
-            document.getElementById('screen-quiz').classList.remove('hidden');
-
-            renderCurrentQuestion();
+            // Dispatch detailed final update to Mock / Teacher Webhook
+            syncProgressLive("COMPLETED", attempt);
         }
 
         function restartQuizWithSameUser() {
-            selectedQuestions = [];
-            currentQuestionIdx = 0;
-            quizAnswersLog = [];
-            quizStartTime = Date.now();
-            activeAttemptId = `att-${Date.now()}`;
+            // Re-uses original student input but regenerates dynamic randomized biology quiz
+            document.getElementById("student-name").value = studentName;
+            document.getElementById("class-period").value = classPeriod;
 
-            for (const topic in QUESTION_BANK) {
-                const allTopicQs = QUESTION_BANK[topic];
-                const subset = shuffleArray(allTopicQs).slice(0, 3).map(q => ({ ...q, topic }));
-                selectedQuestions.push(...subset);
-            }
-            selectedQuestions = shuffleArray(selectedQuestions);
-
-            // Sync initial progress state locally
-            syncQuizProgress("In Progress");
-
-            document.getElementById('screen-results').classList.add('hidden');
-            document.getElementById('screen-quiz').classList.remove('hidden');
-
-            renderCurrentQuestion();
+            // Mock submit
+            const mockEvent = { preventDefault: () => {} };
+            startQuiz(mockEvent);
         }
 
-        // --- RENDER CURRENT WORKBOOK QUESTION ---
-        function renderCurrentQuestion() {
-            const q = selectedQuestions[currentQuestionIdx];
-            const totalQs = selectedQuestions.length;
-            const progressPct = ((currentQuestionIdx + 1) / totalQs) * 100;
-            
-            document.getElementById('progress-bar-fill').style.width = `${progressPct}%`;
-            document.getElementById('progress-text').innerText = `Question ${currentQuestionIdx + 1} of ${totalQs}`;
-            
-            document.getElementById('topic-badge').innerText = `Topic: ${q.topic}`;
-            document.getElementById('question-type-badge').innerText = q.type === "MC" ? "Multiple Choice" : "Short Answer";
-            document.getElementById('question-text').innerHTML = q.text;
+        // ================= WEBHOOK (REALTIME TRANSMISSION) =================
+        function checkWebhookURLDiagnostics() {
+            const diag = document.getElementById("webhook-diagnostics");
+            const syncBadge = document.getElementById("header-sync-badge");
 
-            document.getElementById('btn-submit-answer').classList.remove('hidden');
-            document.getElementById('btn-next-question').classList.add('hidden');
-            document.getElementById('feedback-panel').classList.add('hidden');
-
-            const container = document.getElementById('answer-inputs-container');
-            container.innerHTML = "";
-
-            if (q.type === "MC") {
-                const optionsShuffled = shuffleArray(q.options);
-                optionsShuffled.forEach((opt, idx) => {
-                    const uniqueId = `opt-${idx}`;
-                    const optLabel = String.fromCharCode(65 + idx);
-                    
-                    const optDiv = document.createElement('div');
-                    optDiv.className = "flex items-center space-x-3 p-3.5 border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 cursor-pointer transition-all mb-3 relative overflow-hidden group";
-                    optDiv.onclick = () => {
-                        const rBtn = document.getElementById(uniqueId);
-                        if (!rBtn.disabled) {
-                            rBtn.checked = true;
-                            highlightSelectedOption(uniqueId);
-                        }
-                    };
-
-                    optDiv.innerHTML = `
-                        <input type="radio" id="${uniqueId}" name="quiz-option" value="${opt}" class="w-4 h-4 text-teal-600 focus:ring-teal-500 border-slate-300">
-                        <label for="${uniqueId}" class="block text-sm font-semibold text-slate-800 flex-grow cursor-pointer select-none">
-                            <span class="inline-block bg-slate-100 text-slate-600 w-6 h-6 rounded-md text-center leading-6 text-xs font-bold mr-2 group-hover:bg-teal-50 group-hover:text-teal-700 transition-colors">${optLabel}</span>
-                            ${opt}
-                        </label>
-                    `;
-                    container.appendChild(optDiv);
-                });
-            } else if (q.type === "SA") {
-                const inputDiv = document.createElement('div');
-                inputDiv.className = "space-y-2";
-                inputDiv.innerHTML = `
-                    <input type="text" id="short-answer-input" placeholder="Type your answer here..." autocomplete="off"
-                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm font-medium transition-all"
-                        onkeydown="if(event.key === 'Enter') { event.preventDefault(); submitAnswer(); }">
-                    <p class="text-slate-400 text-[11px] font-medium leading-relaxed">
-                        Tip: Provide a concise, direct answer (e.g., "chloroplast", "dna", "haploid", or "2"). Capitalization and small punctuation variances do not affect scoring.
-                    </p>
-                `;
-                container.appendChild(inputDiv);
-                document.getElementById('short-answer-input').focus();
-            }
-        }
-
-        function highlightSelectedOption(selectedId) {
-            const container = document.getElementById('answer-inputs-container');
-            const inputs = container.querySelectorAll('input[type="radio"]');
-            inputs.forEach(input => {
-                const parent = input.closest('div');
-                if (input.id === selectedId) {
-                    parent.className = "flex items-center space-x-3 p-3.5 border-2 border-teal-500 bg-teal-50/20 rounded-xl cursor-pointer transition-all mb-3 relative overflow-hidden group";
-                } else {
-                    parent.className = "flex items-center space-x-3 p-3.5 border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 cursor-pointer transition-all mb-3 relative overflow-hidden group";
-                }
-            });
-        }
-
-        // --- ANSWER SUBMISSION AND LOCAL RECORD SYNC ---
-        function submitAnswer() {
-            const q = selectedQuestions[currentQuestionIdx];
-            let studentAnsText = "";
-            let isCorrect = false;
-
-            if (q.type === "MC") {
-                const checkedRadio = document.querySelector('input[name="quiz-option"]:checked');
-                if (!checkedRadio) {
-                    showCustomToast("Please select an option before continuing!", true);
-                    return;
-                }
-                studentAnsText = checkedRadio.value;
-                isCorrect = (studentAnsText === q.correctAnswer);
-            } else if (q.type === "SA") {
-                const inputEl = document.getElementById('short-answer-input');
-                studentAnsText = inputEl.value.trim();
-                if (!studentAnsText) {
-                    showCustomToast("Please type an answer before continuing!", true);
-                    return;
-                }
-                const cleanInput = studentAnsText.toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()]/g,"").trim();
-                isCorrect = q.acceptable.some(ans => {
-                    const cleanAns = ans.toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()]/g,"").trim();
-                    return cleanInput === cleanAns;
-                });
-            }
-
-            disableInputs();
-
-            // Record Log locally
-            quizAnswersLog.push({
-                topic: q.topic,
-                question: q.text,
-                correct: isCorrect,
-                studentAns: studentAnsText,
-                correctAns: q.type === "MC" ? q.correctAnswer : q.acceptable.join(" / ")
-            });
-
-            // Sync updated progress instantly to our local database array
-            syncQuizProgress("In Progress");
-
-            // Display Feedback Panel UI
-            showFeedback(isCorrect, q);
-
-            document.getElementById('btn-submit-answer').classList.add('hidden');
-            document.getElementById('btn-next-question').classList.remove('hidden');
-            document.getElementById('btn-next-question').focus();
-        }
-
-        function disableInputs() {
-            const container = document.getElementById('answer-inputs-container');
-            const radios = container.querySelectorAll('input[type="radio"]');
-            radios.forEach(r => r.disabled = true);
-            const saInput = document.getElementById('short-answer-input');
-            if (saInput) saInput.disabled = true;
-        }
-
-        function showFeedback(isCorrect, q) {
-            const panel = document.getElementById('feedback-panel');
-            const iconContainer = document.getElementById('feedback-icon');
-            const title = document.getElementById('feedback-title');
-            const expl = document.getElementById('feedback-explanation');
-
-            panel.classList.remove('hidden');
-            expl.innerHTML = q.explanation;
-
-            if (isCorrect) {
-                panel.className = "mt-6 p-4 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-900 flex items-start space-x-3";
-                title.innerText = "Correct! Well Done.";
-                iconContainer.innerHTML = `
-                    <div class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                    </div>
-                `;
+            if (webhookUrl) {
+                diag.innerHTML = `<span class="text-emerald-600 font-bold">● Connected</span> - <span class="font-mono">${escapeHtml(webhookUrl.substring(0, 45))}...</span>`;
+                syncBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800";
+                syncBadge.innerText = "Webhook Sync Enabled";
             } else {
-                panel.className = "mt-6 p-4 rounded-xl border border-red-200 bg-red-50 text-red-900 flex items-start space-x-3";
-                const displayCorrect = q.type === "MC" ? q.correctAnswer : q.acceptable[0];
-                title.innerHTML = `Incorrect. The correct answer was: "${displayCorrect}"`;
-                iconContainer.innerHTML = `
-                    <div class="w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    </div>
-                `;
+                diag.innerHTML = `<span class="text-slate-500">Offline (Local Storage Mode only)</span>`;
+                syncBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500";
+                syncBadge.innerText = "Local Storage Mode";
             }
-        }
-
-        // --- NEXT QUESTION HANDLER ---
-        function nextQuestion() {
-            currentQuestionIdx++;
-            if (currentQuestionIdx < selectedQuestions.length) {
-                renderCurrentQuestion();
-            } else {
-                finishQuiz();
-            }
-        }
-
-        // --- DYNAMIC PROGRESS SYNC ENGINE ---
-        function syncQuizProgress(status = "In Progress") {
-            const now = new Date();
-            const formattedDate = now.toLocaleDateString() + ", " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            
-            // Calculate real-time metrics
-            const totalCount = selectedQuestions.length || 18;
-            const scoreCount = quizAnswersLog.filter(a => a.correct).length;
-            const pct = Math.round((scoreCount / totalCount) * 100) || 0;
-            const durationMs = quizStartTime ? (Date.now() - quizStartTime) : 0;
-            const formattedDuration = formatDuration(durationMs);
-
-            // Intermediate Category Breakdowns
-            const topicBreakdown = {};
-            for (const topic in QUESTION_BANK) {
-                topicBreakdown[topic] = 0;
-            }
-            quizAnswersLog.forEach(log => {
-                if (log.correct) {
-                    topicBreakdown[log.topic] = (topicBreakdown[log.topic] || 0) + 1;
-                }
-            });
-
-            // Find weakest topic dynamically so far
-            let weakestTopic = "None";
-            let lowestScore = 4;
-            const completedTopics = new Set(quizAnswersLog.map(l => l.topic));
-            completedTopics.forEach(t => {
-                const logsForTopic = quizAnswersLog.filter(l => l.topic === t);
-                const correctCount = logsForTopic.filter(l => l.correct).length;
-                if (correctCount < lowestScore) {
-                    lowestScore = correctCount;
-                    weakestTopic = t;
-                }
-            });
-
-            const attemptRecord = {
-                id: activeAttemptId,
-                studentName: currentStudentName,
-                classPeriod: currentClassPeriod, // Stream Class Period data
-                timestamp: formattedDate,
-                rawTimestamp: quizStartTime || Date.now(),
-                score: scoreCount,
-                total: totalCount,
-                percentage: pct,
-                timeSpent: formattedDuration,
-                weakestTopic: weakestTopic,
-                status: status, // "In Progress" or "Completed"
-                currentProgress: quizAnswersLog.length,
-                answers: quizAnswersLog,
-                breakdown: topicBreakdown
-            };
-
-            // Write and persist inside browser storage
-            const existingIdx = attemptsDatabase.findIndex(a => a.id === activeAttemptId);
-            if (existingIdx !== -1) {
-                attemptsDatabase[existingIdx] = attemptRecord;
-            } else {
-                attemptsDatabase.unshift(attemptRecord);
-            }
-            
-            saveDatabaseToLocal();
-            renderTeacherAnalytics();
-
-            // Real-time sheet Webhook dispatch
-            dispatchWebhookPayload(attemptRecord);
-        }
-
-        // --- CONCLUDE ATTEMPT ---
-        function finishQuiz() {
-            // Push final completed sync with state set to "Completed"
-            syncQuizProgress("Completed");
-
-            // Pull aggregate scores for immediate visual results
-            const scoreCount = quizAnswersLog.filter(a => a.correct).length;
-            const totalCount = quizAnswersLog.length;
-            const pct = Math.round((scoreCount / totalCount) * 100);
-            const durationMs = Date.now() - quizStartTime;
-            const formattedDuration = formatDuration(durationMs);
-
-            // Pull weakest topic
-            let weakestTopic = "None";
-            let lowestScore = 4;
-            const topicBreakdown = {};
-            for (const topic in QUESTION_BANK) {
-                topicBreakdown[topic] = 0;
-            }
-            quizAnswersLog.forEach(log => {
-                if (log.correct) {
-                    topicBreakdown[log.topic] = (topicBreakdown[log.topic] || 0) + 1;
-                }
-            });
-            for (const t in topicBreakdown) {
-                if (topicBreakdown[t] < lowestScore) {
-                    lowestScore = topicBreakdown[t];
-                    weakestTopic = t;
-                }
-            }
-
-            // Shift Screen
-            document.getElementById('screen-quiz').classList.add('hidden');
-            document.getElementById('screen-results').classList.remove('hidden');
-
-            // Render Results
-            document.getElementById('results-greeting').innerText = `Awesome effort, ${currentStudentName}!`;
-            document.getElementById('results-score').innerText = `${scoreCount} / ${totalCount}`;
-            document.getElementById('results-percentage').innerText = `${pct}%`;
-
-            let feedbackStr = "";
-            if (pct >= 90) {
-                feedbackStr = `Outstanding! You displayed exemplary mastery across all targeted biology topics in just ${formattedDuration}. Great job applying your knowledge of matter cycles, energy conversions, and molecular inheritance!`;
-            } else if (pct >= 70) {
-                feedbackStr = `Excellent practice! You completed the quiz in ${formattedDuration} and understand the main pathways quite well. Focus your next review mostly on "${weakestTopic}" to solidify your understanding of these core concepts!`;
-            } else if (pct >= 50) {
-                feedbackStr = `A solid start! Your attempt took ${formattedDuration}, but you could benefit from further revision of core concepts, particularly "${weakestTopic}". Try modeling the inputs and outputs of these systems, then attempt the test again!`;
-            } else {
-                feedbackStr = `We highly recommend checking with your class coordinator to review "${weakestTopic}" (Quiz duration: ${formattedDuration}). Spend some time studying biological energy pathways and base pairing patterns before re-attempting. You can do it!`;
-            }
-            document.getElementById('results-feedback-text').innerText = feedbackStr;
-
-            // Render Topic Breakdown
-            const gridContainer = document.getElementById('results-breakdown-grid');
-            gridContainer.innerHTML = "";
-
-            for (const topic in topicBreakdown) {
-                const score = topicBreakdown[topic];
-                const topicPct = Math.round((score / 3) * 100);
-                
-                let barColor = "bg-red-500";
-                let badgeColor = "bg-red-50 text-red-700 border-red-100";
-                if (score === 3) {
-                    barColor = "bg-emerald-500";
-                    badgeColor = "bg-emerald-50 text-emerald-700 border-emerald-100";
-                } else if (score === 2) {
-                    barColor = "bg-teal-500";
-                    badgeColor = "bg-teal-50 text-teal-700 border-teal-100";
-                } else if (score === 1) {
-                    barColor = "bg-yellow-500";
-                    badgeColor = "bg-yellow-50 text-yellow-700 border-yellow-100";
-                }
-
-                const itemDiv = document.createElement('div');
-                itemDiv.className = "p-4 border border-slate-150 rounded-xl space-y-2.5 bg-slate-50/50";
-                itemDiv.innerHTML = `
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold text-slate-800">${topic}</span>
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${badgeColor}">
-                            ${score}/3 (${topicPct}%)
-                        </span>
-                    </div>
-                    <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                        <div class="${barColor} h-2 rounded-full transition-all" style="width: ${topicPct}%;"></div>
-                    </div>
-                `;
-                gridContainer.appendChild(itemDiv);
-            }
-        }
-
-        // --- PASSWORD VERIFICATION & PANEL SHIFTS ---
-        function openTeacherAuth() {
-            document.getElementById('modal-auth').classList.remove('hidden');
-            document.getElementById('auth-password').value = "";
-            document.getElementById('auth-error').classList.add('hidden');
-            document.getElementById('auth-password').focus();
-        }
-
-        function closeTeacherAuth() {
-            document.getElementById('modal-auth').classList.add('hidden');
-        }
-
-        function verifyTeacherAuth(e) {
-            e.preventDefault();
-            const passInput = document.getElementById('auth-password').value;
-            if (passInput === "CreditRecovery") {
-                document.getElementById('modal-auth').classList.add('hidden');
-                enterTeacherDashboard();
-            } else {
-                document.getElementById('auth-error').classList.remove('hidden');
-            }
-        }
-
-        function enterTeacherDashboard() {
-            document.getElementById('screen-welcome').classList.add('hidden');
-            document.getElementById('screen-quiz').classList.add('hidden');
-            document.getElementById('screen-results').classList.add('hidden');
-            document.getElementById('btn-nav-teacher').classList.add('hidden');
-            document.getElementById('btn-back-home').classList.remove('hidden');
-            document.getElementById('screen-teacher').classList.remove('hidden');
-
-            renderTeacherAnalytics();
-        }
-
-        // --- DATABASE SECTOR CONFIGURATION HANDLERS ---
-        function openDbConfigModal() {
-            document.getElementById('modal-db-setup').classList.remove('hidden');
-            const savedUrl = localStorage.getItem('biology_quiz_webhook_url');
-            document.getElementById('webhook-url-input').value = savedUrl ? savedUrl : "";
-            updateWebhookBadgeUI();
-        }
-
-        function closeDbConfigModal() {
-            document.getElementById('modal-db-setup').classList.add('hidden');
         }
 
         function saveCustomWebhookURL(e) {
             e.preventDefault();
-            const urlValue = document.getElementById('webhook-url-input').value.trim();
-            if (!urlValue) return;
-
-            try {
-                new URL(urlValue); // Validation check
-                localStorage.setItem('biology_quiz_webhook_url', urlValue);
+            const inputVal = document.getElementById("webhook-url-input").value.trim();
+            if (inputVal) {
+                webhookUrl = inputVal;
+                localStorage.setItem("bio_webhook_url", webhookUrl);
+                checkWebhookURLDiagnostics();
                 closeDbConfigModal();
-                updateWebhookBadgeUI();
-                showCustomToast("Google Sheet Webhook URL saved successfully!", false);
-            } catch (err) {
-                alert("Please enter a valid Web App URL (must begin with https://).");
             }
         }
 
         function disconnectWebhook() {
-            const confirmed = confirm("Are you sure you want to disconnect from Google Sheets and revert back to offline Local Storage Mode?");
-            if (!confirmed) return;
-
-            try {
-                localStorage.removeItem('biology_quiz_webhook_url');
-            } catch (e) {}
-
+            webhookUrl = "";
+            localStorage.removeItem("bio_webhook_url");
+            document.getElementById("webhook-url-input").value = "";
+            checkWebhookURLDiagnostics();
             closeDbConfigModal();
-            updateWebhookBadgeUI();
-            showCustomToast("Webhook disconnected. Back to local mode.", false);
         }
 
-        // --- RENDER TEACHER CONTROL HUB ---
-        function renderTeacherAnalytics() {
-            const tableBody = document.getElementById('teacher-attempts-body');
-            const totalAttemptsSpan = document.getElementById('stat-total-attempts');
-            const avgScoreSpan = document.getElementById('stat-avg-score');
-            const passRateSpan = document.getElementById('stat-pass-rate');
-            const toughestTopicSpan = document.getElementById('stat-toughest-topic');
-            const tableCountSpan = document.getElementById('table-record-count');
-            const placeholder = document.getElementById('no-attempts-placeholder');
+        // Simulates & triggers remote server transmission
+        function syncProgressLive(status, fullRecord = null) {
+            // Create descriptive record tracking status updates
+            const currentRecord = fullRecord || {
+                studentName: studentName,
+                classPeriod: classPeriod,
+                timestamp: new Date().toLocaleString(),
+                score: `${getLiveScore()} / ${selectedQuestions.length}`,
+                percentage: Math.round((getLiveScore() / selectedQuestions.length) * 100) || 0,
+                duration: formatSeconds(elapsedSeconds),
+                progressState: status,
+                weakestTopic: "N/A",
+                selectedQuestions: selectedQuestions,
+                currentQuestionIndex: currentQuestionIndex,
+                elapsedSeconds: elapsedSeconds,
+                detailedAnswers: userAnswers
+            };
 
-            tableBody.innerHTML = "";
+            // Post to actual Webhook endpoint if available
+            if (webhookUrl) {
+                fetch(webhookUrl, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(currentRecord)
+                }).catch(err => console.log("Failed to POST to remote Sheets endpoint. Syncing locally."));
+            }
 
-            if (!attemptsDatabase || attemptsDatabase.length === 0) {
-                totalAttemptsSpan.innerText = "0";
-                avgScoreSpan.innerText = "0%";
-                passRateSpan.innerText = "0%";
-                toughestTopicSpan.innerText = "N/A";
-                tableCountSpan.innerText = "Showing 0 attempts";
-                
-                document.getElementById('table-placeholder-text').innerText = "No attempts logged yet in this session.";
-                placeholder.classList.remove('hidden');
+            // Integrate with our Teacher Dashboard inside this app (Dynamic single-page application)
+            syncLocalDashboardData(currentRecord);
+        }
+
+        function getLiveScore() {
+            return userAnswers.filter(a => a && a.isCorrect).length;
+        }
+
+        // ================= LOCAL DASHBOARD SYNC =================
+        function syncLocalDashboardData(updateRecord) {
+            // Finds if there's an ongoing trial for the same student name
+            const existingIdx = studentAttempts.findIndex(
+                att => att.studentName.toLowerCase() === updateRecord.studentName.toLowerCase() && 
+                       att.classPeriod === updateRecord.classPeriod &&
+                       att.progressState !== "COMPLETED"
+            );
+
+            if (existingIdx !== -1) {
+                // Update live in progress status
+                studentAttempts[existingIdx] = {
+                    ...studentAttempts[existingIdx],
+                    score: updateRecord.score,
+                    percentage: updateRecord.percentage,
+                    duration: updateRecord.duration,
+                    progressState: updateRecord.progressState,
+                    timestamp: updateRecord.timestamp,
+                    detailedAnswers: userAnswers,
+                    currentQuestionIndex: currentQuestionIndex,
+                    elapsedSeconds: elapsedSeconds
+                };
+            } else {
+                // If they completed or it's new, insert/update
+                const completeIdx = studentAttempts.findIndex(
+                    att => att.studentName.toLowerCase() === updateRecord.studentName.toLowerCase() && 
+                           att.classPeriod === updateRecord.classPeriod &&
+                           att.progressState === "COMPLETED" &&
+                           updateRecord.progressState === "COMPLETED"
+                );
+
+                if (completeIdx !== -1) {
+                    studentAttempts[completeIdx] = updateRecord;
+                } else {
+                    // Prepend new live status record
+                    studentAttempts.unshift({
+                        id: updateRecord.id || "live_" + Date.now(),
+                        ...updateRecord
+                    });
+                }
+            }
+
+            saveAttemptsToStorage();
+            updateTeacherStatsUI();
+        }
+
+        // ================= TEACHER DASHBOARD LOGIC =================
+        function verifyTeacherAuth(e) {
+            e.preventDefault();
+            const pass = document.getElementById("auth-password").value;
+            const errDiv = document.getElementById("auth-error");
+
+            if (pass === DEFAULT_TEACHER_PASS) {
+                errDiv.classList.add("hidden");
+                document.getElementById("auth-password").value = "";
+                closeTeacherAuth();
+                showScreen("screen-teacher");
+                filterAttemptsTable();
+            } else {
+                errDiv.classList.remove("hidden");
+            }
+        }
+
+        function loadAttemptsFromStorage() {
+            const raw = localStorage.getItem("bio_attempts_db");
+            if (raw) {
+                studentAttempts = JSON.parse(raw);
+            } else {
+                studentAttempts = [];
+            }
+        }
+
+        function saveAttemptsToStorage() {
+            localStorage.setItem("bio_attempts_db", JSON.stringify(studentAttempts));
+        }
+
+        function updateTeacherStatsUI() {
+            const total = studentAttempts.length;
+            document.getElementById("stat-total-attempts").innerText = total;
+
+            if (total === 0) {
+                document.getElementById("stat-avg-score").innerText = "0%";
+                document.getElementById("stat-pass-rate").innerText = "0%";
+                document.getElementById("stat-toughest-topic").innerText = "N/A";
                 return;
             }
 
-            placeholder.classList.add('hidden');
-            totalAttemptsSpan.innerText = attemptsDatabase.length;
-            tableCountSpan.innerText = `Showing ${attemptsDatabase.length} attempt(s)`;
+            // Calculation averages
+            let totalPct = 0;
+            let passingCount = 0;
+            const topicMissMap = {};
 
-            let cumulativeScore = 0;
-            let passingAttempts = 0;
-            let finishedCount = 0;
-            const topicScores = {};
-            const topicTotals = {};
+            studentAttempts.forEach(att => {
+                totalPct += att.percentage;
+                if (att.percentage >= 60) {
+                    passingCount++;
+                }
 
-            for (const topic in QUESTION_BANK) {
-                topicScores[topic] = 0;
-                topicTotals[topic] = 0;
+                // Parse weakest topics
+                if (att.detailedAnswers) {
+                    att.detailedAnswers.forEach(ans => {
+                        if (ans && !ans.isCorrect) {
+                            topicMissMap[ans.topic] = (topicMissMap[ans.topic] || 0) + 1;
+                        }
+                    });
+                }
+            });
+
+            const avg = Math.round(totalPct / total);
+            const passRate = Math.round((passingCount / total) * 100);
+
+            document.getElementById("stat-avg-score").innerText = `${avg}%`;
+            document.getElementById("stat-pass-rate").innerText = `${passRate}%`;
+
+            // Toughest Topic parsing
+            let toughest = "None";
+            let maxMisses = -1;
+            for (const key in topicMissMap) {
+                if (topicMissMap[key] > maxMisses) {
+                    maxMisses = topicMissMap[key];
+                    toughest = key;
+                }
+            }
+            document.getElementById("stat-toughest-topic").innerText = maxMisses > 0 ? toughest : "None";
+        }
+
+        function filterAttemptsTable() {
+            const searchVal = document.getElementById("teacher-search").value.toLowerCase();
+            const periodVal = document.getElementById("teacher-period-filter").value;
+            const tbody = document.getElementById("teacher-attempts-body");
+            const placeholder = document.getElementById("no-attempts-placeholder");
+
+            tbody.innerHTML = "";
+
+            const filtered = studentAttempts.filter(att => {
+                const matchSearch = att.studentName.toLowerCase().includes(searchVal);
+                const matchPeriod = (periodVal === "ALL" || att.classPeriod === periodVal);
+                return matchSearch && matchPeriod;
+            });
+
+            document.getElementById("table-record-count").innerText = `Showing ${filtered.length} attempts`;
+
+            if (filtered.length === 0) {
+                placeholder.classList.remove("hidden");
+                if (studentAttempts.length === 0) {
+                    document.getElementById("table-placeholder-text").innerText = "No attempts logged yet.";
+                } else {
+                    document.getElementById("table-placeholder-text").innerText = "No records matches the filters.";
+                }
+                return;
             }
 
-            attemptsDatabase.forEach(att => {
-                // Calculate aggregated metrics only on finished submissions
-                if (att.status === "Completed") {
-                    cumulativeScore += att.score;
-                    finishedCount++;
-                    if (att.percentage >= 60) passingAttempts++;
-                }
+            placeholder.classList.add("hidden");
 
-                if (att.breakdown) {
-                    for (const topic in att.breakdown) {
-                        topicScores[topic] += att.breakdown[topic];
-                        topicTotals[topic] += 3;
-                    }
-                }
-
-                // Render customized table row
-                const tr = document.createElement('tr');
+            filtered.forEach(att => {
+                const tr = document.createElement("tr");
                 tr.className = "hover:bg-slate-50 transition-colors";
-                
-                // Color configuration of score pills
-                let scoreText = `${att.score} / ${att.total}`;
-                let pctText = `${att.percentage}%`;
-                let pillColor = "bg-slate-100 text-slate-700 border-slate-200";
-                let statusBadge = "";
 
-                if (att.status === "Completed") {
-                    statusBadge = `
-                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-green-50 text-green-700 border border-green-200 font-sans">
-                            Completed
-                        </span>
-                    `;
-                    if (att.percentage >= 85) {
-                        pillColor = "bg-emerald-50 text-emerald-700 border-emerald-200";
-                    } else if (att.percentage >= 60) {
-                        pillColor = "bg-teal-50 text-teal-700 border-teal-200";
-                    } else {
-                        pillColor = "bg-red-50 text-red-700 border-red-200";
-                    }
+                let statusBadge = "";
+                if (att.progressState === "COMPLETED") {
+                    statusBadge = `<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-green-50 text-green-700 border border-green-200">Completed</span>`;
+                } else if (att.progressState === "STARTED") {
+                    statusBadge = `<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">Started Quiz</span>`;
                 } else {
-                    // "In Progress" Real-Time Tracking Badge
-                    statusBadge = `
-                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200 font-sans">
-                            <span class="relative flex h-1.5 w-1.5 mr-1">
-                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                              <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500"></span>
-                            </span>
-                            In Progress
-                        </span>
-                    `;
-                    pillColor = "bg-amber-50 text-amber-800 border-amber-100 font-bold";
-                    scoreText = `Acc: ${att.score}`;
+                    statusBadge = `<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">Active</span>`;
                 }
 
-                // Complete real-time horizontal progress indicator inside table cell
-                const progressPct = Math.round((att.currentProgress / att.total) * 100) || 0;
-                const progressCell = `
-                    <div class="space-y-1 py-1">
-                        <div class="flex justify-between text-[10px] text-slate-500 font-medium">
-                            <span>${att.currentProgress}/${att.total} Qs</span>
-                            <span>${progressPct}%</span>
-                        </div>
-                        <div class="w-24 bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                            <div class="bg-teal-600 h-1.5 rounded-full" style="width: ${progressPct}%;"></div>
-                        </div>
-                    </div>
-                `;
+                const weakTopic = att.weakestTopic || "None";
 
                 tr.innerHTML = `
-                    <td class="px-6 py-4 font-bold text-slate-900 text-sm whitespace-nowrap">${att.studentName}</td>
-                    <td class="px-6 py-4 font-semibold text-teal-800 text-sm whitespace-nowrap">${att.classPeriod || 'Unassigned'}</td>
-                    <td class="px-6 py-4 text-slate-500 whitespace-nowrap">${att.timestamp}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${progressCell}</td>
-                    <td class="px-6 py-4 font-semibold text-slate-800 whitespace-nowrap">${scoreText}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2.5 py-1 rounded-full text-[11px] font-bold border ${pillColor}">
-                            ${pctText}
-                        </span>
+                    <td class="px-6 py-4 font-bold text-slate-900">${escapeHtml(att.studentName)}</td>
+                    <td class="px-6 py-4 text-slate-600 font-medium">${escapeHtml(att.classPeriod)}</td>
+                    <td class="px-6 py-4 text-slate-500 font-mono text-[11px]">${att.timestamp}</td>
+                    <td class="px-6 py-4">${statusBadge}</td>
+                    <td class="px-6 py-4 font-bold text-slate-800">${att.score || '0/18'}</td>
+                    <td class="px-6 py-4">
+                        <span class="font-extrabold ${att.percentage >= 60 ? 'text-teal-700' : 'text-red-600'}">${att.percentage}%</span>
                     </td>
-                    <td class="px-6 py-4 text-slate-600 font-semibold whitespace-nowrap">${att.timeSpent || '0s'}</td>
-                    <td class="px-6 py-4 text-slate-600 font-medium whitespace-nowrap">${att.weakestTopic}</td>
-                    <td class="px-6 py-4 text-right whitespace-nowrap">
-                        <button onclick="viewAttemptDetail('${att.id}')" class="px-2.5 py-1 border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-xs font-semibold rounded-lg transition-colors inline-flex items-center space-x-1 shadow-sm">
-                            <svg class="w-3.5 h-3.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                            <span>${att.status === "In Progress" ? "Live Audit" : "Audit Answers"}</span>
+                    <td class="px-6 py-4 font-mono">${att.duration || '00:00'}</td>
+                    <td class="px-6 py-4"><span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-[10px] font-semibold">${escapeHtml(weakTopic)}</span></td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="viewAttemptDetail('${att.id}')" class="px-2.5 py-1 bg-slate-900 hover:bg-black text-white font-bold rounded text-[10px] transition-all">
+                            Review Attempt
                         </button>
                     </td>
                 `;
-                tableBody.appendChild(tr);
+                tbody.appendChild(tr);
             });
-
-            // Calculate aggregate classroom metrics
-            if (finishedCount > 0) {
-                const totalPossible = finishedCount * 18;
-                const classAveragePercent = Math.round((cumulativeScore / totalPossible) * 100);
-                avgScoreSpan.innerText = `${classAveragePercent}%`;
-
-                const classPassRate = Math.round((passingAttempts / finishedCount) * 100);
-                passRateSpan.innerText = `${classPassRate}%`;
-            } else {
-                avgScoreSpan.innerText = "0%";
-                passRateSpan.innerText = "0%";
-            }
-
-            // Compute toughest classroom unit dynamically
-            let toughestTopic = "None";
-            let lowestAvgPct = 101;
-            for (const topic in topicTotals) {
-                if (topicTotals[topic] > 0) {
-                    const avg = (topicScores[topic] / topicTotals[topic]) * 100;
-                    if (avg < lowestAvgPct) {
-                        lowestAvgPct = avg;
-                        toughestTopic = topic;
-                    }
-                }
-            }
-            toughestTopicSpan.innerText = toughestTopic === "None" ? "N/A" : `${toughestTopic} (${Math.round(lowestAvgPct)}%)`;
         }
 
-        // --- DETAILED WORKSPACE AUDITOR MODAL ---
         function viewAttemptDetail(attemptId) {
-            const att = attemptsDatabase.find(x => x.id === attemptId);
+            const att = studentAttempts.find(a => a.id === attemptId);
             if (!att) return;
 
-            const nameHeader = document.getElementById('detail-student-name');
-            nameHeader.innerHTML = `
-                <div class="flex items-center space-x-2">
-                    <span>${att.studentName} (${att.classPeriod || 'Unassigned'})</span>
-                    ${att.status === "In Progress" ? `
-                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-800 animate-pulse font-sans">
-                            Live Feed
-                        </span>
-                    ` : ""}
-                </div>
-            `;
-            document.getElementById('detail-timestamp').innerText = `Date & Time Registered: ${att.timestamp}`;
-            document.getElementById('detail-score').innerText = `${att.score} / ${att.total}`;
-            document.getElementById('detail-percent').innerText = `${att.percentage}%`;
-            document.getElementById('detail-time-spent').innerText = att.timeSpent || '0s';
+            document.getElementById("detail-student-name").innerText = `${att.studentName}`;
+            document.getElementById("detail-timestamp").innerText = `Time Logged: ${att.timestamp}`;
+            document.getElementById("detail-score").innerText = att.score || '0 / 18';
+            document.getElementById("detail-percent").innerText = `${att.percentage}%`;
+            document.getElementById("detail-period").innerText = att.classPeriod;
+            document.getElementById("detail-duration").innerText = att.duration || '00:00';
 
-            const statusEl = document.getElementById('detail-status');
-            if (att.status === "In Progress") {
-                statusEl.innerText = "IN PROGRESS";
-                statusEl.className = "text-xs font-bold text-white bg-amber-500 px-3 py-0.5 rounded-full inline-block mt-1";
-            } else if (att.percentage >= 60) {
-                statusEl.innerText = "PASSING";
-                statusEl.className = "text-xs font-bold text-white bg-emerald-600 px-3 py-0.5 rounded-full inline-block mt-1";
-            } else {
-                statusEl.innerText = "RE-ATTEMPT SUGGESTED";
-                statusEl.className = "text-xs font-bold text-white bg-red-600 px-3 py-0.5 rounded-full inline-block mt-1";
-            }
+            // Custom Subject Breakdowns
+            const breakdownContainer = document.getElementById("detail-subject-breakdown");
+            breakdownContainer.innerHTML = "";
 
-            const listContainer = document.getElementById('detail-question-list');
-            listContainer.innerHTML = "";
+            if (att.topicStats && att.topicStats.total) {
+                for (const t in att.topicStats.total) {
+                    const corr = att.topicStats.correct[t] || 0;
+                    const tot = att.topicStats.total[t] || 0;
+                    const pct = tot > 0 ? Math.round((corr / tot) * 100) : 0;
 
-            if (!att.answers || att.answers.length === 0) {
-                listContainer.innerHTML = `
-                    <div class="text-center py-8 bg-slate-50 rounded-xl border border-slate-150">
-                        <p class="text-xs text-slate-500 font-semibold inline">Student is setting up their quiz. No answers submitted yet...</p>
-                    </div>
-                `;
-            } else {
-                att.answers.forEach((ans, index) => {
-                    const qBox = document.createElement('div');
-                    const borderColor = ans.correct ? "border-emerald-100 bg-emerald-50/20" : "border-red-100 bg-red-50/20";
-                    const markBadge = ans.correct 
-                        ? `<span class="bg-emerald-100 text-emerald-800 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded font-sans">Correct</span>` 
-                        : `<span class="bg-red-100 text-red-800 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded font-sans">Incorrect</span>`;
-
-                    qBox.className = `p-4 border rounded-xl space-y-2 ${borderColor} transition-all`;
-                    qBox.innerHTML = `
-                        <div class="flex justify-between items-start gap-2">
-                            <span class="text-[10px] font-bold text-slate-400 tracking-wider uppercase font-sans">${ans.topic}</span>
-                            ${markBadge}
+                    const row = document.createElement("div");
+                    row.className = "text-xs space-y-1";
+                    row.innerHTML = `
+                        <div class="flex justify-between items-center font-semibold">
+                            <span>${t}</span>
+                            <span>${corr}/${tot} correct (${pct}%)</span>
                         </div>
-                        <p class="text-xs font-bold text-slate-800 leading-snug font-sans">${index + 1}. ${ans.question}</p>
-                        <div class="text-[11px] grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 border-t border-slate-100">
-                            <div>
-                                <span class="text-slate-400 font-semibold block uppercase text-[9px] font-sans">Student Answer:</span>
-                                <span class="font-bold text-slate-700 font-sans">${ans.studentAns || '[Blank]'}</span>
-                            </div>
-                            <div>
-                                <span class="text-slate-400 font-semibold block uppercase text-[9px] font-sans">Target Answer:</span>
-                                <span class="font-bold text-teal-800 font-sans">${ans.correctAns}</span>
-                            </div>
+                        <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                            <div class="h-1.5 rounded-full ${pct >= 75 ? 'bg-teal-600' : pct >= 50 ? 'bg-amber-500' : 'bg-red-500'}" style="width: ${pct}%"></div>
                         </div>
                     `;
-                    listContainer.appendChild(qBox);
-                });
+                    breakdownContainer.appendChild(row);
+                }
+            } else {
+                breakdownContainer.innerHTML = `<span class="text-xs text-slate-400 italic">No breakdown available for incomplete attempts.</span>`;
             }
 
-            document.getElementById('modal-detail').classList.remove('hidden');
+            // Detailed answers
+            const responsesContainer = document.getElementById("detail-responses-container");
+            responsesContainer.innerHTML = "";
+
+            if (att.detailedAnswers && att.detailedAnswers.length > 0) {
+                att.detailedAnswers.forEach((ans, idx) => {
+                    const div = document.createElement("div");
+                    div.className = `p-3.5 rounded-xl border text-xs space-y-1 ${ans.isCorrect ? 'border-green-100 bg-green-50/50' : 'border-red-100 bg-red-50/50'}`;
+                    
+                    div.innerHTML = `
+                        <div class="flex justify-between font-bold items-center mb-1">
+                            <span class="text-slate-500 uppercase text-[10px]">Q${idx + 1} - ${ans.topic}</span>
+                            <span class="${ans.isCorrect ? 'text-green-800' : 'text-red-800'}">${ans.isCorrect ? '✓ Correct' : '✗ Incorrect'}</span>
+                        </div>
+                        <p class="font-semibold text-slate-900 leading-normal">${formatLaTexMarkers(ans.question)}</p>
+                        <p class="text-slate-600 mt-1"><b class="font-bold">Student Choice:</b> ${escapeHtml(ans.selectedAnswer)}</p>
+                        ${!ans.isCorrect ? `<p class="text-emerald-800 font-medium"><b class="font-bold">Correct Key:</b> ${escapeHtml(ans.correctAnswer)}</p>` : ''}
+                    `;
+                    responsesContainer.appendChild(div);
+                });
+            } else {
+                responsesContainer.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">No detailed individual answers registered yet.</p>`;
+            }
+
+            // Toggle Open detail modal
+            document.getElementById("modal-detail").classList.remove("hidden");
         }
 
-        // --- CLOSES ATTEMPT DETAIL MODAL ---
         function closeAttemptDetail() {
-            document.getElementById('modal-detail').classList.add('hidden');
+            document.getElementById("modal-detail").classList.add("hidden");
         }
 
-        // --- CLEAR DATABASE SESSION SAMPLES ---
         function promptClearAttempts() {
-            const confirmed = confirm("Are you sure you want to clear all quiz logs from your local browser dashboard?");
-            if (!confirmed) return;
-
-            try {
-                localStorage.removeItem('biology_quiz_local_attempts');
-            } catch (e) {}
-
-            attemptsDatabase = [];
-            renderTeacherAnalytics();
-            showCustomToast("Local session dashboard wiped successfully.", false);
+            const check = confirm("Are you absolutely sure you want to clear all biology practice attempts from your local dashboard? This action cannot be undone.");
+            if (check) {
+                studentAttempts = [];
+                saveAttemptsToStorage();
+                updateTeacherStatsUI();
+                filterAttemptsTable();
+            }
         }
 
-        // --- EXPORT METRICS COMPACTOR ---
         function exportToCSV() {
-            if (attemptsDatabase.length === 0) {
-                showCustomToast("No data logged yet to export!", true);
+            if (studentAttempts.length === 0) {
+                alert("There are no attempts logged yet to export.");
                 return;
             }
 
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Student Name,Class Period,Timestamp,Raw Score,Percentage %,Progress (Out of 18),Time Spent,Status,Weakest Unit\n";
+            csvContent += "Student Name,Class Period,Date & Time,Raw Score,Percentage,Elapsed Duration,Weakest Unit,Status\n";
 
-            attemptsDatabase.forEach(row => {
-                const name = `"${row.studentName.replace(/"/g, '""')}"`;
-                const period = `"${row.classPeriod || 'Unassigned'}"`;
-                const date = `"${row.timestamp}"`;
-                const score = `${row.score}/18`;
-                const pct = `${row.percentage}%`;
-                const progress = `${row.currentProgress || 0}/18`;
-                const duration = `"${row.timeSpent || 'N/A'}"`;
-                const status = `"${row.status || 'Completed'}"`;
-                const weakest = `"${row.weakestTopic}"`;
-                csvContent += `${name},${period},${date},${score},${pct},${progress},${duration},${status},${weakest}\n`;
+            studentAttempts.forEach(att => {
+                const name = `"${att.studentName.replace(/"/g, '""')}"`;
+                const period = `"${att.classPeriod.replace(/"/g, '""')}"`;
+                const date = `"${att.timestamp}"`;
+                const score = `"${att.score}"`;
+                const pct = `"${att.percentage}%"`;
+                const dur = `"${att.duration}"`;
+                const weak = `"${(att.weakestTopic || 'None').replace(/"/g, '""')}"`;
+                const status = `"${att.progressState}"`;
+
+                csvContent += `${name},${period},${date},${score},${pct},${dur},${weak},${status}\n`;
             });
 
+            // Trigger dynamic download
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `BioQuiz_Report_${Date.now()}.csv`);
+            link.setAttribute("download", `biology_practice_results_${Date.now()}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            showCustomToast("Class statistics CSV downloaded!", false);
         }
 
-        // --- TOAST NOTIFICATIONS ---
-        function showCustomToast(message, isError = false) {
-            const toast = document.getElementById('toast-notice');
-            const messageSpan = document.getElementById('toast-message');
-            messageSpan.innerText = message;
-            
-            if (isError) {
-                toast.className = "fixed bottom-4 right-4 bg-red-950 text-red-200 text-xs font-semibold px-4 py-3 rounded-xl shadow-lg transform transition-all duration-300 z-50 flex items-center space-x-2 border border-red-800";
-            } else {
-                toast.className = "fixed bottom-4 right-4 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-lg transform transition-all duration-300 z-50 flex items-center space-x-2";
+        // ================= MODALS & POPUPS =================
+        function openTeacherAuth() {
+            document.getElementById("modal-auth").classList.remove("hidden");
+        }
+
+        function closeTeacherAuth() {
+            document.getElementById("modal-auth").classList.add("hidden");
+        }
+
+        function openDbConfigModal() {
+            document.getElementById("webhook-url-input").value = webhookUrl;
+            document.getElementById("modal-db-setup").classList.remove("hidden");
+        }
+
+        function closeDbConfigModal() {
+            document.getElementById("modal-db-setup").classList.add("hidden");
+        }
+
+        // ================= FORMATTERS & TIMERS =================
+        function startTimer(resume = false) {
+            if (!resume) {
+                elapsedSeconds = 0;
             }
+            document.getElementById("timer-display").innerText = `Elapsed: ${formatSeconds(elapsedSeconds)}`;
             
-            // Slide in
-            toast.classList.remove('opacity-0', 'translate-y-24');
-            
-            // Slide out after 3 seconds
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-24');
-            }, 3000);
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                elapsedSeconds++;
+                document.getElementById("timer-display").innerText = `Elapsed: ${formatSeconds(elapsedSeconds)}`;
+            }, 1000);
         }
 
-        // Initialize immediately as a clean, normal, synchronous offline block
-        resetToWelcome();
-        loadDatabaseFromLocal();
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
 
+        function formatSeconds(totalSeconds) {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            const formattedMinutes = String(minutes).padStart(2, "0");
+            const formattedSeconds = String(seconds).padStart(2, "0");
+            return `${formattedMinutes}:${formattedSeconds}`;
+        }
+
+        function formatLaTexMarkers(text) {
+            if (!text) return "";
+            // Replace basic $...$ markers with clean, formatted LaTeX lookups (no heavy libraries required)
+            return text
+                .replace(/\$H_2O\$/g, "H<sub>2</sub>O")
+                .replace(/\$CO_2\$/g, "CO<sub>2</sub>")
+                .replace(/\$O_2\$/g, "O<sub>2</sub>")
+                .replace(/\$K\$/g, "<i>K</i>")
+                .replace(/\$r\$/g, "<i>r</i>");
+        }
+
+        function escapeHtml(unsafe) {
+            if (!unsafe) return "";
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
     </script>
 </body>
 </html>
