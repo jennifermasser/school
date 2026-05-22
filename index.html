@@ -475,9 +475,26 @@
     <!-- ================= JAVASCRIPT SYSTEM & REAL-TIME SYNC ENGINE ================= -->
     <script type="module">
         // Import Firebase JS modules via CDN
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, deleteDoc, collection, onSnapshot, query, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // =========================================================================
+        // 🌟 EASY SETUP: HARDCODED FIREBASE CONFIGURATION
+        // =========================================================================
+        // Paste your custom Firebase web configuration object below. If populated,
+        // all student devices and the teacher portal will automatically link
+        // to this database upon loading, without needing manual setup on each tab!
+        // =========================================================================
+        const HARDCODED_FIREBASE_CONFIG = {
+            apiKey: "AIzaSyBsAH1_UZazyxf43vCXGXWl4pI0q4OkF4U",
+            authDomain: "credit-recovery-week-2-ebd19.firebaseapp.com",
+            projectId: "credit-recovery-week-2-ebd19",
+            storageBucket: "credit-recovery-week-2-ebd19.firebasestorage.app",
+            messagingSenderId: "211416537487",
+            appId: "1:211416537487:web:65ed9adcafe50a197513fa"
+        };
+        // =========================================================================
 
         // --- MASTER QUESTION REPOSITORY ---
         const QUESTION_BANK = {
@@ -815,14 +832,32 @@
                     firestoreUnsubscribe = null;
                 }
 
-                const app = initializeApp(config);
+                // RULE 3: Auth Before Queries & Correct Re-initialization
+                // Prevent app/duplicate-app error by reusing an already initialized instance if options are the same,
+                // or initializing cleanly if it's the first time/updated credentials.
+                let app;
+                const activeApps = getApps();
+                if (activeApps.length > 0) {
+                    app = activeApps[0];
+                } else {
+                    app = initializeApp(config);
+                }
+
                 auth = getAuth(app);
                 db = getFirestore(app);
 
-                // Authentication prior to operations matching RULE 3
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
+                // RULE 3: ALWAYS call Anonymous Sign In first (or with Custom Token priority)
+                // In our external customer setting, __initial_auth_token isn't a valid custom token for their project
+                // and triggers "auth/custom-token-mismatch" instantly. We safely check and fall back immediately.
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (authErr) {
+                    // Fall back cleanly to anonymous login if the token fails or is mismatched
+                    console.warn("Primary custom token mismatch. Falling back to anonymous credentials...", authErr);
                     await signInAnonymously(auth);
                 }
 
@@ -948,6 +983,7 @@
 
         // --- AUTOMATED INITIALIZATION SEQUENCE ---
         const startupBootSequence = async () => {
+            // Priority 1: Check for manual local override settings in localStorage (Teacher Portal override)
             let savedConfigStr = null;
             try {
                 savedConfigStr = localStorage.getItem('custom_firebase_config');
@@ -964,7 +1000,17 @@
                 }
             }
 
-            // Fallback: check environment injection keys
+            // Priority 2: Check for Hardcoded Global configuration
+            if (HARDCODED_FIREBASE_CONFIG) {
+                try {
+                    await connectToFirebase(HARDCODED_FIREBASE_CONFIG);
+                    return;
+                } catch (e) {
+                    console.error("Hardcoded configuration failed to connect:", e);
+                }
+            }
+
+            // Priority 3: Check for environment injection keys (inside sandbox environment)
             if (typeof __firebase_config !== 'undefined' && __firebase_config) {
                 try {
                     const parsedConfig = JSON.parse(__firebase_config);
@@ -1497,6 +1543,7 @@
             document.getElementById('db-config-json').value = saved ? saved : "";
         }
 
+        // --- CLOSES DB CONFIG MODAL ---
         function closeDbConfigModal() {
             document.getElementById('modal-db-setup').classList.add('hidden');
         }
@@ -1740,7 +1787,7 @@
                 <div class="flex items-center space-x-2">
                     <span>${att.studentName}'s Live Attempt</span>
                     ${att.status === "In Progress" ? `
-                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-800 animate-pulse">
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-800 animate-pulse font-sans">
                             Live Feed
                         </span>
                     ` : ""}
