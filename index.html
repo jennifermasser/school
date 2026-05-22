@@ -97,17 +97,10 @@
                     <p class="text-teal-100 text-sm mt-3 leading-relaxed">
                         Prepare for your unit evaluations with this randomized practice quiz focusing on the big ideas of life science. You will receive exactly <strong>3 questions</strong> per topic (18 questions total), randomly pulled from our active curriculum bank.
                     </p>
-                    <p class="text-teal-200 text-xs font-semibold mt-2">✨ Live Progress Sync: Your teacher can review your work live as you proceed!</p>
-                    
-                    <!-- Topic Badges -->
-                    <div class="flex flex-wrap gap-2 mt-5">
-                        <span class="bg-white/10 text-white text-xs px-2.5 py-1 rounded-md border border-white/10">Photosynthesis</span>
-                        <span class="bg-white/10 text-white text-xs px-2.5 py-1 rounded-md border border-white/10">Cellular Respiration</span>
-                        <span class="bg-white/10 text-white text-xs px-2.5 py-1 rounded-md border border-white/10">Mitosis</span>
-                        <span class="bg-white/10 text-white text-xs px-2.5 py-1 rounded-md border border-white/10">Meiosis</span>
-                        <span class="bg-white/10 text-white text-xs px-2.5 py-1 rounded-md border border-white/10">DNA Structure</span>
-                        <span class="bg-white/10 text-white text-xs px-2.5 py-1 rounded-md border border-white/10">DNA Replication</span>
-                    </div>
+                    <p class="text-teal-200 text-xs font-semibold mt-2 flex items-center">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
+                        Live Progress Sync: Your teacher can review your work live as you proceed!
+                    </p>
                 </div>
             </div>
 
@@ -199,7 +192,7 @@
         <!-- ================= RESULTS SCREEN ================= -->
         <section id="screen-results" class="hidden space-y-6">
             <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-lg text-center relative overflow-hidden">
-                <!-- Dynamic Trophy Celebration SVG -->
+                <!-- Trophy SVG -->
                 <div class="mx-auto w-20 h-20 bg-teal-50 rounded-full flex items-center justify-center text-teal-600 mb-4 shadow-inner">
                     <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
@@ -210,7 +203,7 @@
                 <h2 class="text-3xl font-extrabold text-slate-950 mt-3" id="results-greeting">Great Job!</h2>
                 <p class="text-slate-500 text-sm mt-1">Your final response was successfully formatted and synced with the portal database.</p>
 
-                <!-- Big Score Circular Display -->
+                <!-- Score Circular Display -->
                 <div class="my-8 flex justify-center items-center">
                     <div class="relative flex items-center justify-center w-40 h-40 rounded-full border-8 border-teal-50 bg-teal-50/20 shadow-md">
                         <div class="text-center">
@@ -220,10 +213,10 @@
                     </div>
                 </div>
 
-                <!-- Recommendation box -->
+                <!-- Feedback Box -->
                 <div class="max-w-md mx-auto p-4 bg-slate-50 rounded-xl border border-slate-100 mb-6">
                     <h4 class="font-bold text-xs text-slate-700 uppercase tracking-wide mb-1">Performance Feedback</h4>
-                    <p id="results-feedback-text" class="text-slate-600 text-xs leading-relaxed">
+                    <p id="results-feedback-text" class="text-slate-600 text-xs leading-relaxed font-medium">
                         Feedback statement loading...
                     </p>
                 </div>
@@ -256,14 +249,14 @@
                     <h2 class="text-2xl font-extrabold mt-1">Classroom Progress Analytics</h2>
                 </div>
                 <div class="flex flex-wrap gap-2">
-                    <button onclick="openDbConfigModal()" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold flex items-center space-x-1 border border-amber-500 transition-colors">
+                    <button onclick="openDbConfigModal()" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold flex items-center space-x-1 border border-amber-500 transition-colors shadow-md">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         </svg>
-                        <span>Configure Database</span>
+                        <span>Database Diagnostics</span>
                     </button>
-                    <button onclick="exportToCSV()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold flex items-center space-x-1 border border-slate-700 transition-colors">
+                    <button onclick="exportToCSV()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold flex items-center space-x-1 border border-slate-700 transition-colors shadow-sm">
                         <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
@@ -334,7 +327,8 @@
                     <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
-                    <p class="text-slate-500 font-medium">No attempts logged yet in this session.</p>
+                    <p class="text-slate-500 font-semibold" id="table-placeholder-text">No attempts logged yet in this session.</p>
+                    <p class="text-slate-400 text-xs mt-1 max-w-sm mx-auto hidden" id="table-placeholder-hint">Open the quiz on a student device or another tab to see live results sync instantly!</p>
                 </div>
             </div>
         </section>
@@ -390,21 +384,24 @@
                 </p>
             </div>
             <div class="p-6 overflow-y-auto custom-scrollbar space-y-4 flex-grow text-xs text-slate-600">
+                <div id="active-diagnostic-card" class="hidden p-3 rounded-lg border leading-relaxed space-y-1.5">
+                    <span class="font-bold block uppercase text-[10px] tracking-wide" id="diagnostic-status-title">Status Report</span>
+                    <p id="diagnostic-status-message"></p>
+                </div>
+
                 <div class="bg-slate-50 p-3 rounded-lg border border-slate-150 space-y-1.5 leading-relaxed">
-                    <span class="font-bold text-slate-800 block">How to get keys:</span>
-                    1. Go to your <a href="https://console.firebase.google.com/" target="_blank" class="text-teal-600 hover:underline font-semibold">Firebase Console</a>.<br>
-                    2. Create or open a project and register a **Web App**.<br>
-                    3. Enable **Anonymous Sign-In** inside Firebase Auth.<br>
-                    4. Enable **Cloud Firestore** database (allow Public/Test Read/Write rules on `/artifacts/*`).<br>
-                    5. Paste the exact `firebaseConfig` keys below.
+                    <span class="font-bold text-slate-800 block">Setup Checklist:</span>
+                    1. Enable **Anonymous Sign-In** inside Firebase Auth.<br>
+                    2. Enable **Cloud Firestore** and deploy correct security rules.<br>
+                    3. Paste your web app's config block below.
                 </div>
                 <form id="form-db-config" onsubmit="saveCustomFirebaseConfig(event)" class="space-y-3">
                     <div>
-                        <label for="db-config-json" class="block font-bold text-slate-700 uppercase tracking-wider mb-1.5">Firebase Configuration JSON / Object</label>
+                        <label for="db-config-json" class="block font-bold text-slate-700 uppercase tracking-wider mb-1.5">Firebase Configuration Object</label>
                         <textarea id="db-config-json" required rows="6" placeholder='e.g.&#10;{&#10;  "apiKey": "AIzaSy...",&#10;  "authDomain": "myproject.firebaseapp.com",&#10;  "projectId": "myproject-123",&#10;  "appId": "1:2345:web:abcd..."&#10;}'
                             class="w-full font-mono px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-[11px]"></textarea>
                     </div>
-                    <div id="db-config-error" class="hidden p-2 text-red-800 bg-red-50 border border-red-200 rounded-lg font-medium"></div>
+                    <div id="db-config-error" class="hidden p-2.5 text-red-800 bg-red-50 border border-red-200 rounded-lg font-semibold"></div>
                     
                     <div class="flex justify-end space-x-2 pt-2 border-t border-slate-100">
                         <button type="button" onclick="closeDbConfigModal()" class="px-4 py-2 border border-slate-200 text-slate-600 font-semibold rounded-lg hover:bg-slate-50">Cancel</button>
@@ -467,7 +464,7 @@
         </div>
     </div>
 
-    <!-- Global Notice Banner for Feedback (e.g. Copied to Clipboard) -->
+    <!-- Global Notice Banner for Feedback -->
     <div id="toast-notice" class="fixed bottom-4 right-4 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-lg transform translate-y-24 opacity-0 transition-all duration-300 z-50 flex items-center space-x-2">
         <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -810,10 +807,12 @@
 
         // --- DYNAMIC DATABASE INITIALIZER ---
         async function connectToFirebase(config) {
+            updateHeaderConnectionStatus("connecting", config.projectId);
             try {
                 // Unsubscribe from any active database listener first
                 if (firestoreUnsubscribe) {
                     firestoreUnsubscribe();
+                    firestoreUnsubscribe = null;
                 }
 
                 const app = initializeApp(config);
@@ -828,49 +827,115 @@
                 }
 
                 isDbConnected = true;
-                updateHeaderConnectionUI(true, config.projectId);
+                updateHeaderConnectionStatus("connected", config.projectId);
 
-                // Active snapshot listener using strict path rules matching RULE 1
+                // Active snapshot listener using strict path rules matching RULE 1 & 2
                 const attemptsCol = collection(db, 'artifacts', appId, 'public', 'data', 'attempts');
                 firestoreUnsubscribe = onSnapshot(attemptsCol, (snapshot) => {
                     const syncedAttempts = [];
                     snapshot.forEach((doc) => {
                         syncedAttempts.push(doc.data());
                     });
-                    attemptsDatabase = syncedAttempts.sort((a, b) => b.rawTimestamp - a.rawTimestamp);
+                    
+                    // Merge live database with any local storage attempts (prioritize live)
+                    attemptsDatabase = mergeLocalAndOnlineAttempts(syncedAttempts);
                     renderTeacherAnalytics();
                 }, (err) => {
                     console.error("Firestore live feed subscription failed:", err);
-                    showCustomToast("Database connected but failed subscription. Review security rules!", true);
+                    isDbConnected = false;
+                    handleConnectionError(err);
                 });
 
             } catch (err) {
                 console.error("Firebase Connection Setup Failed:", err);
                 isDbConnected = false;
-                updateHeaderConnectionUI(false);
+                handleConnectionError(err);
                 throw err;
             }
         }
 
-        // --- CONNECTION STATUS UPDATE HANDLER ---
-        function updateHeaderConnectionUI(connected, projectId = "") {
+        // --- MERGE OFFLINE AND ONLINE WORKBOOKS ---
+        function mergeLocalAndOnlineAttempts(syncedList) {
+            let localList = [];
+            try {
+                const stored = localStorage.getItem('local_attempts_backup');
+                if (stored) localList = JSON.parse(stored);
+            } catch(e){}
+
+            // Combine both pools, favoring live records in case of duplicate IDs
+            const mergedMap = new Map();
+            localList.forEach(item => mergedMap.set(item.id, item));
+            syncedList.forEach(item => mergedMap.set(item.id, item));
+
+            return Array.from(mergedMap.values()).sort((a, b) => b.rawTimestamp - a.rawTimestamp);
+        }
+
+        // --- INTERACTIVE DIAGNOSTICS & SYSTEM ALERTS ---
+        function handleConnectionError(err) {
+            updateHeaderConnectionStatus("error");
+            
+            const errDiv = document.getElementById('db-config-error');
+            const diagCard = document.getElementById('active-diagnostic-card');
+            const diagMsg = document.getElementById('diagnostic-status-message');
+            const diagTitle = document.getElementById('diagnostic-status-title');
+
+            let helpfulAdvice = "";
+            let errMsg = err.message || String(err);
+
+            if (errMsg.includes("permission-denied") || errMsg.includes("Missing or insufficient permissions")) {
+                helpfulAdvice = "🔒 **Firestore Rules Blocked:** Your Database rules are denying access. Go to Firestore Database > Rules tab, and ensure you have published rules allowing read/write access under `/artifacts/**`.";
+                diagCard.className = "p-3 rounded-lg border border-red-200 bg-red-50 text-red-900 leading-relaxed space-y-1";
+                diagTitle.innerText = "Security Rules Denied Access";
+            } else if (errMsg.includes("auth") || errMsg.includes("API key")) {
+                helpfulAdvice = "🔑 **Authentication Blocked:** Your API Key may be restricted, or Anonymous Sign-In is not enabled. Go to Authentication > Sign-in method tab in your Firebase Console, and enable **Anonymous** sign-in.";
+                diagCard.className = "p-3 rounded-lg border border-amber-200 bg-amber-50 text-amber-900 leading-relaxed space-y-1";
+                diagTitle.innerText = "Authentication Error";
+            } else {
+                helpfulAdvice = "🌐 **Connection Stalled:** The web client could not establish a network link. Check your internet connection, verify that the project ID is pasted correctly, or check your local firewall.";
+                diagCard.className = "p-3 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 leading-relaxed space-y-1";
+                diagTitle.innerText = "Network Stalled";
+            }
+
+            diagMsg.innerHTML = `${helpfulAdvice}<br><span class="block mt-2 font-mono text-[10px] text-slate-500">Firebase Raw Code: ${errMsg}</span>`;
+            diagCard.classList.remove('hidden');
+
+            if (errDiv) {
+                errDiv.innerText = "Error: " + errMsg;
+                errDiv.classList.remove('hidden');
+            }
+
+            // Fallback back to offline rendering immediately so the UI remains active
+            loadDummyData(false); 
+        }
+
+        // --- CONNECTION STATUS BADGE STYLER ---
+        function updateHeaderConnectionStatus(status, projectId = "") {
             const hBadge = document.getElementById('header-sync-badge');
             const tableBadge = document.getElementById('live-feed-badge');
 
-            if (connected) {
+            if (status === "connected") {
                 hBadge.innerText = `Connected: ${projectId}`;
-                hBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-800";
+                hBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-800 animate-pulse";
                 
                 tableBadge.innerHTML = `
                     <span class="relative flex h-1.5 w-1.5 mr-1.5">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
                     </span>
-                    Live Shared Database Active
+                    Live Cloud Sync Connected
                 `;
                 tableBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 flex items-center";
+            } else if (status === "connecting") {
+                hBadge.innerText = `Connecting: ${projectId}...`;
+                hBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 animate-pulse";
+                
+                tableBadge.innerHTML = `
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 mr-1.5 animate-ping"></span>
+                    Connecting to Database...
+                `;
+                tableBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-800 flex items-center";
             } else {
-                hBadge.innerText = "Offline Mode";
+                hBadge.innerText = "Offline Sandbox";
                 hBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500";
                 
                 tableBadge.innerHTML = `
@@ -881,9 +946,8 @@
             }
         }
 
-        // --- AUTOMATED IN-MEMORY STARTUP HANDLER ---
+        // --- AUTOMATED INITIALIZATION SEQUENCE ---
         const startupBootSequence = async () => {
-            // Check for user-pasted custom storage settings
             let savedConfigStr = null;
             try {
                 savedConfigStr = localStorage.getItem('custom_firebase_config');
@@ -895,7 +959,7 @@
                     await connectToFirebase(parsedConfig);
                     return;
                 } catch (e) {
-                    console.warn("Saved custom configuration invalid. Purging local entry.", e);
+                    console.warn("Stored custom config invalid. Resetting.", e);
                     try { localStorage.removeItem('custom_firebase_config'); } catch(err){}
                 }
             }
@@ -906,7 +970,6 @@
                     const parsedConfig = JSON.parse(__firebase_config);
                     await connectToFirebase(parsedConfig);
                 } catch (e) {
-                    console.error("Environment config parsed poorly:", e);
                     loadDummyData();
                 }
             } else {
@@ -914,69 +977,48 @@
             }
         };
 
-        function loadDummyData() {
-            attemptsDatabase = [
-                {
-                    id: "att-mock-1",
-                    studentName: "Sarah Jenkins",
-                    timestamp: "May 22, 2026, 7:45 AM",
-                    rawTimestamp: Date.now() - 3600000,
-                    score: 16,
-                    total: 18,
-                    percentage: 89,
-                    timeSpent: "4m 12s",
-                    weakestTopic: "DNA Replication",
-                    status: "Completed",
-                    currentProgress: 18,
-                    answers: [
-                        { topic: "Photosynthesis", question: "What is the primary organelle where plants transform radiant solar energy into stable chemical energy?", correct: true, studentAns: "Chloroplast" },
-                        { topic: "Photosynthesis", question: "What carbon-rich gas must plants absorb from the atmosphere as a main starting reactant to construct sugar molecules?", correct: true, studentAns: "carbon dioxide" },
-                        { topic: "Photosynthesis", question: "Which of the following describes the basic transfer of energy during photosynthesis?", correct: true, studentAns: "Light energy is captured and stored as chemical energy within sugar molecules." },
-                        { topic: "Cellular Respiration", question: "What is the primary organelle responsible for breaking down sugar molecules to release highly usable chemical energy (ATP)?", correct: true, studentAns: "Mitochondria" },
-                        { topic: "Cellular Respiration", question: "What is the three-letter abbreviation of the primary energy currency molecule generated during cellular respiration?", correct: true, studentAns: "atp" },
-                        { topic: "Cellular Respiration", question: "What is the ultimate biological goal of cellular respiration in living organisms?", correct: true, studentAns: "To break down food to yield usable chemical energy for the cell." },
-                        { topic: "Mitosis", question: "What is the primary function of mitosis in multicellular organisms, such as humans?", correct: true, studentAns: "Growth and repairing damaged tissues" },
-                        { topic: "Mitosis", question: "How many genetically identical daughter cells are produced from a single parent cell at the end of mitosis?", correct: true, studentAns: "2" },
-                        { topic: "Mitosis", question: "Which of the following statements best describes the genetic makeup of the cells produced by mitosis?", correct: true, studentAns: "They are genetically identical to the original parent cell." },
-                        { topic: "Meiosis", question: "What is the primary function of meiosis in sexually reproducing organisms?", correct: true, studentAns: "To produce gametes (sperm and eggs) with half the original genetic material" },
-                        { topic: "Meiosis", question: "How many total daughter cells are produced at the completion of meiosis, starting from a single diploid parent cell?", correct: true, studentAns: "4" },
-                        { topic: "Meiosis", question: "If a human somatic (body) cell has 46 chromosomes, how many chromosomes will be in a mature egg or sperm cell produced by meiosis?", correct: true, studentAns: "23" },
-                        { topic: "DNA Structure", question: "What is the general twisted-ladder structural shape of a double-stranded DNA molecule?", correct: true, studentAns: "Double helix" },
-                        { topic: "DNA Structure", question: "According to DNA complementary base-pairing rules, what base will always pair with Adenine (A) on the opposite strand?", correct: true, studentAns: "Thymine" },
-                        { topic: "DNA Structure", question: "DNA is a polymer made up of simpler repeating chemical units. What are these individual structural subunits called?", correct: true, studentAns: "Nucleotides" },
-                        { topic: "DNA Replication", question: "Why must a cell replicate its entire genome of DNA before it undergoes cell division?", correct: false, studentAns: "To make glucose for energy", correctAns: "To ensure each new daughter cell receives an exact, complete set of genetic instructions." },
-                        { topic: "DNA Replication", question: "DNA replication is described as 'semi-conservative.' This means each copied double helix consists of one original strand and one ____________ strand.", correct: true, studentAns: "new" },
-                        { topic: "DNA Replication", question: "What is the final, high-level biological outcome of the DNA replication process?", correct: false, studentAns: "Amino acids are assembled into a functional, folded protein.", correctAns: "Two identical double-stranded DNA helices are formed from one original molecule." }
-                    ],
-                    breakdown: { "Photosynthesis": 3, "Cellular Respiration": 3, "Mitosis": 3, "Meiosis": 3, "DNA Structure": 3, "DNA Replication": 1 }
-                },
-                {
-                    id: "att-mock-2",
-                    studentName: "Devon Miller",
-                    timestamp: "May 22, 2026, 7:55 AM",
-                    rawTimestamp: Date.now() - 2400000,
-                    score: 6,
-                    total: 18,
-                    percentage: 33,
-                    timeSpent: "2m 15s",
-                    weakestTopic: "Mitosis",
-                    status: "In Progress",
-                    currentProgress: 9,
-                    answers: [
-                        { topic: "Photosynthesis", question: "What is the primary organelle where plants transform radiant solar energy into stable chemical energy?", correct: true, studentAns: "Chloroplast" },
-                        { topic: "Photosynthesis", question: "What carbon-rich gas must plants absorb from the atmosphere as a main starting reactant to construct sugar molecules?", correct: true, studentAns: "carbon dioxide" },
-                        { topic: "Photosynthesis", question: "Which of the following describes the basic transfer of energy during photosynthesis?", correct: true, studentAns: "Light energy is captured and stored as chemical energy within sugar molecules." },
-                        { topic: "Cellular Respiration", question: "What is the primary organelle responsible for breaking down sugar molecules to release highly usable chemical energy (ATP)?", correct: true, studentAns: "Mitochondria" },
-                        { topic: "Cellular Respiration", question: "What is the three-letter abbreviation of the primary energy currency molecule generated during cellular respiration?", correct: true, studentAns: "atp" },
-                        { topic: "Cellular Respiration", question: "What is the ultimate biological goal of cellular respiration in living organisms?", correct: false, studentAns: "To copy chromosomes", correctAns: "To break down food to yield usable chemical energy for the cell." },
-                        { topic: "Mitosis", question: "What is the primary function of mitosis in multicellular organisms, such as humans?", correct: false, studentAns: "Producing eggs and sperm", correctAns: "Growth and repairing damaged tissues" },
-                        { topic: "Mitosis", question: "How many genetically identical daughter cells are produced from a single parent cell at the end of mitosis?", correct: true, studentAns: "2" },
-                        { topic: "Mitosis", question: "Which of the following statements best describes the genetic makeup of the cells produced by mitosis?", correct: false, studentAns: "They contain half the genetic info", correctAns: "They are genetically identical to the original parent cell." }
-                    ],
-                    breakdown: { "Photosynthesis": 3, "Cellular Respiration": 2, "Mitosis": 1, "Meiosis": 0, "DNA Structure": 0, "DNA Replication": 0 }
-                }
-            ];
-            updateHeaderConnectionUI(false);
+        function loadDummyData(showFullMocks = true) {
+            if (showFullMocks) {
+                const mocks = [
+                    {
+                        id: "att-mock-1",
+                        studentName: "Sarah Jenkins",
+                        timestamp: "May 22, 2026, 7:45 AM",
+                        rawTimestamp: Date.now() - 3600000,
+                        score: 16,
+                        total: 18,
+                        percentage: 89,
+                        timeSpent: "4m 12s",
+                        weakestTopic: "DNA Replication",
+                        status: "Completed",
+                        currentProgress: 18,
+                        answers: [
+                            { topic: "Photosynthesis", question: "What is the primary organelle where plants transform radiant solar energy into stable chemical energy?", correct: true, studentAns: "Chloroplast" },
+                            { topic: "Photosynthesis", question: "What carbon-rich gas must plants absorb from the atmosphere as a main starting reactant to construct sugar molecules?", correct: true, studentAns: "carbon dioxide" },
+                            { topic: "Photosynthesis", question: "Which of the following describes the basic transfer of energy during photosynthesis?", correct: true, studentAns: "Light energy is captured and stored as chemical energy within sugar molecules." },
+                            { topic: "Cellular Respiration", question: "What is the primary organelle responsible for breaking down sugar molecules to release highly usable chemical energy (ATP)?", correct: true, studentAns: "Mitochondria" },
+                            { topic: "Cellular Respiration", question: "What is the three-letter abbreviation of the primary energy currency molecule generated during cellular respiration?", correct: true, studentAns: "atp" },
+                            { topic: "Cellular Respiration", question: "What is the ultimate biological goal of cellular respiration in living organisms?", correct: true, studentAns: "To break down food to yield usable chemical energy for the cell." },
+                            { topic: "Mitosis", question: "What is the primary function of mitosis in multicellular organisms, such as humans?", correct: true, studentAns: "Growth and repairing damaged tissues" },
+                            { topic: "Mitosis", question: "How many genetically identical daughter cells are produced from a single parent cell at the end of mitosis?", correct: true, studentAns: "2" },
+                            { topic: "Mitosis", question: "Which of the following statements best describes the genetic makeup of the cells produced by mitosis?", correct: true, studentAns: "They are genetically identical to the original parent cell." },
+                            { topic: "Meiosis", question: "What is the primary function of meiosis in sexually reproducing organisms?", correct: true, studentAns: "To produce gametes (sperm and eggs) with half the original genetic material" },
+                            { topic: "Meiosis", question: "How many total daughter cells are produced at the completion of meiosis, starting from a single diploid parent cell?", correct: true, studentAns: "4" },
+                            { topic: "Meiosis", question: "If a human somatic (body) cell has 46 chromosomes, how many chromosomes will be in a mature egg or sperm cell produced by meiosis?", correct: true, studentAns: "23" },
+                            { topic: "DNA Structure", question: "What is the general twisted-ladder structural shape of a double-stranded DNA molecule?", correct: true, studentAns: "Double helix" },
+                            { topic: "DNA Structure", question: "According to DNA complementary base-pairing rules, what base will always pair with Adenine (A) on the opposite strand?", correct: true, studentAns: "Thymine" },
+                            { topic: "DNA Structure", question: "DNA is a polymer made up of simpler repeating chemical units. What are these individual structural subunits called?", correct: true, studentAns: "Nucleotides" },
+                            { topic: "DNA Replication", question: "Why must a cell replicate its entire genome of DNA before it undergoes cell division?", correct: false, studentAns: "To make glucose for energy", correctAns: "To ensure each new daughter cell receives an exact, complete set of genetic instructions." },
+                            { topic: "DNA Replication", question: "DNA replication is described as 'semi-conservative.' This means each copied double helix consists of one original strand and one ____________ strand.", correct: true, studentAns: "new" },
+                            { topic: "DNA Replication", question: "What is the final, high-level biological outcome of the DNA replication process?", correct: false, studentAns: "Amino acids are assembled into a functional, folded protein.", correctAns: "Two identical double-stranded DNA helices are formed from one original molecule." }
+                        ],
+                        breakdown: { "Photosynthesis": 3, "Cellular Respiration": 3, "Mitosis": 3, "Meiosis": 3, "DNA Structure": 3, "DNA Replication": 1 }
+                    }
+                ];
+                attemptsDatabase = mergeLocalAndOnlineAttempts(mocks);
+            } else {
+                attemptsDatabase = mergeLocalAndOnlineAttempts([]);
+            }
             renderTeacherAnalytics();
         }
 
@@ -1032,7 +1074,9 @@
                 breakdown: topicBreakdown
             };
 
-            // Write to Firestore if connected, otherwise save in local memory
+            // Write to Firestore if connected, but ALWAYS back up to local storage first
+            backupAttemptToLocalStorage(attemptRecord);
+
             if (isDbConnected && db) {
                 try {
                     const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'attempts', activeAttemptId);
@@ -1041,7 +1085,7 @@
                     console.error("Firestore sync write failed", e);
                 }
             } else {
-                // Local Fallback simulation
+                // Instantly update the local display database
                 const existingIdx = attemptsDatabase.findIndex(a => a.id === activeAttemptId);
                 if (existingIdx !== -1) {
                     attemptsDatabase[existingIdx] = attemptRecord;
@@ -1052,25 +1096,29 @@
             }
         }
 
-        // --- SHUFFLER UTILITY ---
-        function shuffleArray(array) {
-            let shuffled = [...array];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            return shuffled;
-        }
+        // --- LOCAL STORAGE BACKUP SYSTEM ---
+        function backupAttemptToLocalStorage(attempt) {
+            try {
+                let localList = [];
+                const stored = localStorage.getItem('local_attempts_backup');
+                if (stored) localList = JSON.parse(stored);
 
-        // --- TIME FORMATTING UTILITY ---
-        function formatDuration(ms) {
-            const totalSeconds = Math.floor(ms / 1000);
-            const minutes = Math.floor(totalSeconds / 60);
-            const seconds = totalSeconds % 60;
-            if (minutes > 0) {
-                return `${minutes}m ${seconds}s`;
+                const existingIdx = localList.findIndex(a => a.id === attempt.id);
+                if (existingIdx !== -1) {
+                    localList[existingIdx] = attempt;
+                } else {
+                    localList.unshift(attempt);
+                }
+
+                // Keep only the last 100 entries locally to maintain storage performance
+                if (localList.length > 100) {
+                    localList = localList.slice(0, 100);
+                }
+
+                localStorage.setItem('local_attempts_backup', JSON.stringify(localList));
+            } catch (e) {
+                console.warn("Failed to write offline storage backup", e);
             }
-            return `${seconds}s`;
         }
 
         // --- NAVIGATOR SWITCHES ---
@@ -1105,7 +1153,7 @@
             }
             selectedQuestions = shuffleArray(selectedQuestions);
 
-            // Instantly sync initial "In Progress" record to the server
+            // Instantly sync initial "In Progress" record
             syncQuizProgress("In Progress");
 
             // UI Transformation
@@ -1254,7 +1302,7 @@
                 correctAns: q.type === "MC" ? q.correctAnswer : q.acceptable.join(" / ")
             });
 
-            // Sync updated progress instantly to active dashboard database
+            // Sync updated progress instantly to active database
             syncQuizProgress("In Progress");
 
             // Display Feedback Panel UI
@@ -1439,7 +1487,10 @@
         // --- DATABASE SECTOR CONFIGURATION HANDLERS ---
         function openDbConfigModal() {
             document.getElementById('modal-db-setup').classList.remove('hidden');
+            
+            // clear error divs
             document.getElementById('db-config-error').classList.add('hidden');
+            document.getElementById('active-diagnostic-card').classList.add('hidden');
             
             // pre-load active keys
             const saved = localStorage.getItem('custom_firebase_config');
@@ -1454,6 +1505,7 @@
             e.preventDefault();
             const errDiv = document.getElementById('db-config-error');
             errDiv.classList.add('hidden');
+            document.getElementById('active-diagnostic-card').classList.add('hidden');
 
             const rawValue = document.getElementById('db-config-json').value.trim();
             if (!rawValue) return;
@@ -1491,9 +1543,7 @@
                 closeDbConfigModal();
                 showCustomToast("Live database connected successfully!", false);
             } catch (connectionErr) {
-                errDiv.innerText = "Failed connection: " + connectionErr.message;
-                errDiv.classList.remove('hidden');
-                try { localStorage.removeItem('custom_firebase_config'); } catch(err){}
+                // Handled gracefully inside connectToFirebase's catch block as well
             }
         }
 
@@ -1534,6 +1584,16 @@
                 passRateSpan.innerText = "0%";
                 toughestTopicSpan.innerText = "N/A";
                 tableCountSpan.innerText = "Showing 0 attempts";
+                
+                // Highlight help hints if database is successfully connected but completely blank
+                if (isDbConnected) {
+                    document.getElementById('table-placeholder-text').innerText = "Database Connected: Awaiting Student Submissions";
+                    document.getElementById('table-placeholder-hint').classList.remove('hidden');
+                } else {
+                    document.getElementById('table-placeholder-text').innerText = "No attempts logged yet in this session.";
+                    document.getElementById('table-placeholder-hint').classList.add('hidden');
+                }
+                
                 placeholder.classList.remove('hidden');
                 return;
             }
@@ -1753,8 +1813,13 @@
 
         // --- CLEAR DATABASE SESSION SAMPLES ---
         async function promptClearAttempts() {
-            const confirmed = confirm("Are you sure you want to clear all quiz logs from the database?");
+            const confirmed = confirm("Are you sure you want to clear all quiz logs? This will wipe your live database and your local backups.");
             if (!confirmed) return;
+
+            // Purge local backup immediately
+            try {
+                localStorage.removeItem('local_attempts_backup');
+            } catch (e) {}
 
             if (isDbConnected && db) {
                 try {
@@ -1762,7 +1827,7 @@
                     const snapshot = await getDocs(attemptsCol);
                     const deletes = snapshot.docs.map(doc => deleteDoc(doc.ref));
                     await Promise.all(deletes);
-                    showCustomToast("Database logs wiped successfully.", false);
+                    showCustomToast("Database logs and local backups wiped successfully.", false);
                 } catch (e) {
                     console.error("Wipe failed", e);
                 }
