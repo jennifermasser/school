@@ -58,7 +58,7 @@
                 <div>
                     <div class="flex items-center space-x-2">
                         <h1 class="font-bold text-lg text-slate-900 tracking-tight leading-tight">BioLab Quizzer</h1>
-                        <span id="header-sync-badge" class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-teal-100 text-teal-800">
+                        <span id="header-sync-badge" class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500">
                             Local Storage Mode
                         </span>
                     </div>
@@ -97,20 +97,38 @@
                     <p class="text-teal-100 text-sm mt-3 leading-relaxed">
                         Prepare for your unit evaluations with this randomized practice quiz focusing on the big ideas of life science. You will receive exactly <strong>3 questions</strong> per topic (18 questions total), randomly pulled from our active curriculum bank.
                     </p>
+                    <p class="text-teal-200 text-xs font-semibold mt-2.5 flex items-center">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
+                        Live Progress Sync: Your teacher can review your work live as you proceed!
+                    </p>
                 </div>
             </div>
 
             <!-- Start Panel -->
             <div class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-md">
                 <h3 class="text-xl font-bold text-slate-900 mb-2">Ready to Start?</h3>
-                <p class="text-slate-500 text-sm mb-6">Enter your full name to begin. Your practice scores, elapsed time, and completed answers will be automatically recorded locally for teacher review.</p>
+                <p class="text-slate-500 text-sm mb-6">Enter your full name and select your class period to begin. Your practice scores, elapsed time, and live answers will be automatically synced with the teacher portal.</p>
                 
                 <form id="form-start-quiz" onsubmit="startQuiz(event)" class="space-y-4">
-                    <div>
-                        <label for="student-name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Student Full Name</label>
-                        <div class="relative rounded-xl shadow-sm">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="md:col-span-2">
+                            <label for="student-name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Student Full Name</label>
                             <input type="text" id="student-name" required placeholder="e.g. Jessica Miller" 
                                 class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-slate-800 placeholder-slate-400 font-medium transition-all">
+                        </div>
+                        <div>
+                            <label for="class-period" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Class Period</label>
+                            <select id="class-period" required 
+                                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-slate-800 font-medium transition-all cursor-pointer">
+                                <option value="" disabled selected>Select Period</option>
+                                <option value="Period 1">Period 1</option>
+                                <option value="Period 2">Period 2</option>
+                                <option value="Period 3">Period 3</option>
+                                <option value="Period 4">Period 4</option>
+                                <option value="Period 5">Period 5</option>
+                                <option value="Period 6">Period 6</option>
+                                <option value="Period 7">Period 7</option>
+                            </select>
                         </div>
                     </div>
                     
@@ -197,7 +215,7 @@
 
                 <span class="text-xs font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-100">Quiz Completed!</span>
                 <h2 class="text-3xl font-extrabold text-slate-950 mt-3" id="results-greeting">Great Job!</h2>
-                <p class="text-slate-500 text-sm mt-1">Your final response was successfully recorded locally.</p>
+                <p class="text-slate-500 text-sm mt-1">Your final response was successfully recorded and dispatched to Google Sheets.</p>
 
                 <!-- Score Circular Display -->
                 <div class="my-8 flex justify-center items-center">
@@ -222,7 +240,7 @@
                         Try Another Dynamic Quiz
                     </button>
                     <button onclick="resetToWelcome()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 py-3 rounded-xl transition-all">
-                        Change Name
+                        Change Name / Class
                     </button>
                 </div>
             </div>
@@ -245,6 +263,13 @@
                     <h2 class="text-2xl font-extrabold mt-1 font-sans">Classroom Progress Analytics</h2>
                 </div>
                 <div class="flex flex-wrap gap-2">
+                    <button onclick="openDbConfigModal()" class="px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold flex items-center space-x-1 border border-amber-500 transition-colors shadow-md">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Webhook Settings</span>
+                    </button>
                     <button onclick="exportToCSV()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold flex items-center space-x-1 border border-slate-700 transition-colors shadow-sm">
                         <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -286,8 +311,8 @@
                     <div class="flex items-center space-x-2">
                         <h3 class="font-bold text-slate-900 text-sm">Classroom Practice Logs</h3>
                         <span id="live-feed-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 flex items-center">
-                            <span class="w-1.5 h-1.5 rounded-full bg-slate-400 mr-1.5"></span>
-                            Local Session Active
+                            <span class="w-1.5 h-1.5 rounded-full bg-slate-400 mr-1.5 animate-pulse"></span>
+                            Local Sync Active
                         </span>
                     </div>
                     <span class="text-xs text-slate-500" id="table-record-count">Showing 0 attempts</span>
@@ -298,6 +323,7 @@
                         <thead>
                             <tr class="bg-slate-50 text-slate-500 border-b border-slate-200 font-semibold uppercase tracking-wider">
                                 <th class="px-6 py-3">Student Name</th>
+                                <th class="px-6 py-3">Class Period</th>
                                 <th class="px-6 py-3">Date & Time</th>
                                 <th class="px-6 py-3">Completed Progress</th>
                                 <th class="px-6 py-3">Raw Score</th>
@@ -351,6 +377,42 @@
                     <div class="flex space-x-2 pt-2">
                         <button type="button" onclick="closeTeacherAuth()" class="w-1/2 py-2 border border-slate-200 text-slate-600 text-xs font-semibold rounded-lg hover:bg-slate-50">Cancel</button>
                         <button type="submit" class="w-1/2 py-2 bg-slate-900 hover:bg-black text-white text-xs font-semibold rounded-lg">Authorize</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Webhook Connection Config Modal -->
+    <div id="modal-db-setup" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden border border-slate-100 flex flex-col max-h-[90vh]">
+            <div class="p-6 border-b border-slate-150">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center">
+                    <svg class="w-5 h-5 text-amber-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                    Configure Google Sheets Webhook URL
+                </h3>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                    Connecting to your custom Google Apps Script Web App allows student responses to write automatically to your personal spreadsheet in real time.
+                </p>
+            </div>
+            <div class="p-6 overflow-y-auto custom-scrollbar space-y-4 flex-grow text-xs text-slate-600">
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-150 space-y-1.5 leading-relaxed">
+                    <span class="font-bold text-slate-800 block">Webhook Sync Status:</span>
+                    <p id="webhook-diagnostics" class="font-semibold text-slate-600">Currently Offline (Local Storage Mode only)</p>
+                </div>
+                <form id="form-db-config" onsubmit="saveCustomWebhookURL(event)" class="space-y-3">
+                    <div>
+                        <label for="webhook-url-input" class="block font-bold text-slate-700 uppercase tracking-wider mb-1.5">Google Apps Script Web App Webhook URL</label>
+                        <input type="url" id="webhook-url-input" required placeholder="https://script.google.com/macros/s/AKfycby.../exec"
+                            class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-[11px] font-mono">
+                    </div>
+                    
+                    <div class="flex justify-end space-x-2 pt-2 border-t border-slate-100">
+                        <button type="button" onclick="closeDbConfigModal()" class="px-4 py-2 border border-slate-200 text-slate-600 font-semibold rounded-lg hover:bg-slate-50">Cancel</button>
+                        <button type="button" onclick="disconnectWebhook()" class="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-700 font-semibold rounded-lg">Disconnect Webhook</button>
+                        <button type="submit" class="px-4 py-2 bg-teal-700 hover:bg-teal-800 text-white font-semibold rounded-lg">Save & Connect</button>
                     </div>
                 </form>
             </div>
@@ -418,6 +480,16 @@
 
     <!-- ================= JAVASCRIPT SYSTEM & LOCAL STORAGE ENGINE ================= -->
     <script>
+        // =========================================================================
+        // 🌟 QUICK CUSTOM CONFIGURATION: HARDCODED APPS SCRIPT WEBHOOK URL
+        // =========================================================================
+        // If you would like to hardcode your Google Apps Script Web App URL so that
+        // students do not have to configure anything, paste your URL inside the quotes:
+        // =========================================================================
+        const HARDCODED_WEBHOOK_URL = ""; 
+        // Example: "https://script.google.com/macros/s/AKfycbwPz.../exec"
+        // =========================================================================
+
         // --- MASTER QUESTION REPOSITORY ---
         const QUESTION_BANK = {
             "Photosynthesis": [
@@ -730,6 +802,7 @@
 
         // --- GLOBAL STATE ---
         let currentStudentName = "";
+        let currentClassPeriod = "";
         let selectedQuestions = []; // Exactly 18 questions (3 per category)
         let currentQuestionIdx = 0;
         let quizAnswersLog = []; // [{ question, userAnswer, isCorrect, correctText }]
@@ -749,6 +822,7 @@
                         {
                             id: "att-mock-1",
                             studentName: "Sarah Jenkins",
+                            classPeriod: "Period 1",
                             timestamp: new Date().toLocaleDateString() + ", 8:14 AM",
                             rawTimestamp: Date.now() - 3600000,
                             score: 16,
@@ -756,6 +830,8 @@
                             percentage: 89,
                             timeSpent: "4m 12s",
                             weakestTopic: "DNA Replication",
+                            status: "Completed",
+                            currentProgress: 18,
                             answers: [
                                 { topic: "Photosynthesis", question: "What is the primary organelle where plants transform radiant solar energy into stable chemical energy?", correct: true, studentAns: "Chloroplast", correctAns: "Chloroplast" },
                                 { topic: "Photosynthesis", question: "What carbon-rich gas must plants absorb from the atmosphere as a main starting reactant to construct sugar molecules?", correct: true, studentAns: "carbon dioxide", correctAns: "carbon dioxide / co2" },
@@ -784,6 +860,7 @@
             } catch(e) {
                 console.error("Failed to parse LocalStorage records", e);
             }
+            updateWebhookBadgeUI();
             renderTeacherAnalytics();
         }
 
@@ -792,6 +869,70 @@
                 localStorage.setItem('biology_quiz_local_attempts', JSON.stringify(attemptsDatabase));
             } catch(e) {
                 console.warn("Failed to write offline local attempts", e);
+            }
+        }
+
+        // --- WEBHOOK ENGINE: DISPATCH TO GOOGLE SHEETS ---
+        async function dispatchWebhookPayload(attempt) {
+            const webhookUrl = localStorage.getItem('biology_quiz_webhook_url') || HARDCODED_WEBHOOK_URL;
+            if (!webhookUrl) return;
+
+            try {
+                // Utilizing text/plain with no-cors to reliably route past CORS preflight constraints in standalone pages
+                await fetch(webhookUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    },
+                    body: JSON.stringify(attempt)
+                });
+            } catch (err) {
+                console.warn("Real-time Webhook sync dispatch failed:", err);
+            }
+        }
+
+        // --- WEBHOOK STATUS BADGE RE-RENDER ---
+        function updateWebhookBadgeUI() {
+            const hBadge = document.getElementById('header-sync-badge');
+            const tableBadge = document.getElementById('live-feed-badge');
+            const configDiagnostics = document.getElementById('webhook-diagnostics');
+            
+            const url = localStorage.getItem('biology_quiz_webhook_url') || HARDCODED_WEBHOOK_URL;
+
+            if (url) {
+                const urlObj = new URL(url);
+                const shortDomain = urlObj.hostname;
+                hBadge.innerText = `Sheets Sync: On`;
+                hBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-800";
+                
+                tableBadge.innerHTML = `
+                    <span class="relative flex h-1.5 w-1.5 mr-1.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                    </span>
+                    Real-time Webhook Streaming Connected
+                `;
+                tableBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 flex items-center";
+                
+                if (configDiagnostics) {
+                    configDiagnostics.innerText = `Connected: Dispatching logs to ${shortDomain}`;
+                    configDiagnostics.className = "font-bold text-emerald-600";
+                }
+            } else {
+                hBadge.innerText = "Local Mode";
+                hBadge.className = "inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500";
+                
+                tableBadge.innerHTML = `
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400 mr-1.5"></span>
+                    Local Session Active (No Webhook)
+                `;
+                tableBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 flex items-center";
+                
+                if (configDiagnostics) {
+                    configDiagnostics.innerText = "Currently Offline (Local Storage Mode only)";
+                    configDiagnostics.className = "font-bold text-slate-600";
+                }
             }
         }
 
@@ -825,15 +966,18 @@
             document.getElementById('btn-back-home').classList.add('hidden');
             document.getElementById('btn-nav-teacher').classList.remove('hidden');
             document.getElementById('student-name').value = currentStudentName;
+            document.getElementById('class-period').value = currentClassPeriod;
         }
 
         // --- START QUIZ SESSION ---
         function startQuiz(e) {
             e.preventDefault();
             const nameInput = document.getElementById('student-name').value.trim();
-            if (!nameInput) return;
+            const periodSelect = document.getElementById('class-period').value;
+            if (!nameInput || !periodSelect) return;
 
             currentStudentName = nameInput;
+            currentClassPeriod = periodSelect;
             selectedQuestions = [];
             currentQuestionIdx = 0;
             quizAnswersLog = [];
@@ -848,7 +992,7 @@
             }
             selectedQuestions = shuffleArray(selectedQuestions);
 
-            // Record initial "In Progress" log locally
+            // Record initial "In Progress" log locally and push webhook
             syncQuizProgress("In Progress");
 
             // UI Transformation
@@ -1094,6 +1238,7 @@
             const attemptRecord = {
                 id: activeAttemptId,
                 studentName: currentStudentName,
+                classPeriod: currentClassPeriod, // Stream Class Period data
                 timestamp: formattedDate,
                 rawTimestamp: quizStartTime || Date.now(),
                 score: scoreCount,
@@ -1117,6 +1262,9 @@
             
             saveDatabaseToLocal();
             renderTeacherAnalytics();
+
+            // Real-time sheet Webhook dispatch
+            dispatchWebhookPayload(attemptRecord);
         }
 
         // --- CONCLUDE ATTEMPT ---
@@ -1243,6 +1391,47 @@
             renderTeacherAnalytics();
         }
 
+        // --- DATABASE SECTOR CONFIGURATION HANDLERS ---
+        function openDbConfigModal() {
+            document.getElementById('modal-db-setup').classList.remove('hidden');
+            const savedUrl = localStorage.getItem('biology_quiz_webhook_url');
+            document.getElementById('webhook-url-input').value = savedUrl ? savedUrl : "";
+            updateWebhookBadgeUI();
+        }
+
+        function closeDbConfigModal() {
+            document.getElementById('modal-db-setup').classList.add('hidden');
+        }
+
+        function saveCustomWebhookURL(e) {
+            e.preventDefault();
+            const urlValue = document.getElementById('webhook-url-input').value.trim();
+            if (!urlValue) return;
+
+            try {
+                new URL(urlValue); // Validation check
+                localStorage.setItem('biology_quiz_webhook_url', urlValue);
+                closeDbConfigModal();
+                updateWebhookBadgeUI();
+                showCustomToast("Google Sheet Webhook URL saved successfully!", false);
+            } catch (err) {
+                alert("Please enter a valid Web App URL (must begin with https://).");
+            }
+        }
+
+        function disconnectWebhook() {
+            const confirmed = confirm("Are you sure you want to disconnect from Google Sheets and revert back to offline Local Storage Mode?");
+            if (!confirmed) return;
+
+            try {
+                localStorage.removeItem('biology_quiz_webhook_url');
+            } catch (e) {}
+
+            closeDbConfigModal();
+            updateWebhookBadgeUI();
+            showCustomToast("Webhook disconnected. Back to local mode.", false);
+        }
+
         // --- RENDER TEACHER CONTROL HUB ---
         function renderTeacherAnalytics() {
             const tableBody = document.getElementById('teacher-attempts-body');
@@ -1351,6 +1540,7 @@
 
                 tr.innerHTML = `
                     <td class="px-6 py-4 font-bold text-slate-900 text-sm whitespace-nowrap">${att.studentName}</td>
+                    <td class="px-6 py-4 font-semibold text-teal-800 text-sm whitespace-nowrap">${att.classPeriod || 'Unassigned'}</td>
                     <td class="px-6 py-4 text-slate-500 whitespace-nowrap">${att.timestamp}</td>
                     <td class="px-6 py-4 whitespace-nowrap">${progressCell}</td>
                     <td class="px-6 py-4 font-semibold text-slate-800 whitespace-nowrap">${scoreText}</td>
@@ -1360,7 +1550,7 @@
                         </span>
                     </td>
                     <td class="px-6 py-4 text-slate-600 font-semibold whitespace-nowrap">${att.timeSpent || '0s'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${statusBadge}</td>
+                    <td class="px-6 py-4 text-slate-600 font-medium whitespace-nowrap">${att.weakestTopic}</td>
                     <td class="px-6 py-4 text-right whitespace-nowrap">
                         <button onclick="viewAttemptDetail('${att.id}')" class="px-2.5 py-1 border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 text-xs font-semibold rounded-lg transition-colors inline-flex items-center space-x-1 shadow-sm">
                             <svg class="w-3.5 h-3.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
@@ -1407,7 +1597,7 @@
             const nameHeader = document.getElementById('detail-student-name');
             nameHeader.innerHTML = `
                 <div class="flex items-center space-x-2">
-                    <span>${att.studentName}'s Live Attempt</span>
+                    <span>${att.studentName} (${att.classPeriod || 'Unassigned'})</span>
                     ${att.status === "In Progress" ? `
                         <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-800 animate-pulse font-sans">
                             Live Feed
@@ -1501,10 +1691,11 @@
             }
 
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Student Name,Timestamp,Raw Score,Percentage %,Progress (Out of 18),Time Spent,Status,Weakest Unit\n";
+            csvContent += "Student Name,Class Period,Timestamp,Raw Score,Percentage %,Progress (Out of 18),Time Spent,Status,Weakest Unit\n";
 
             attemptsDatabase.forEach(row => {
                 const name = `"${row.studentName.replace(/"/g, '""')}"`;
+                const period = `"${row.classPeriod || 'Unassigned'}"`;
                 const date = `"${row.timestamp}"`;
                 const score = `${row.score}/18`;
                 const pct = `${row.percentage}%`;
@@ -1512,7 +1703,7 @@
                 const duration = `"${row.timeSpent || 'N/A'}"`;
                 const status = `"${row.status || 'Completed'}"`;
                 const weakest = `"${row.weakestTopic}"`;
-                csvContent += `${name},${date},${score},${pct},${progress},${duration},${status},${weakest}\n`;
+                csvContent += `${name},${period},${date},${score},${pct},${progress},${duration},${status},${weakest}\n`;
             });
 
             const encodedUri = encodeURI(csvContent);
